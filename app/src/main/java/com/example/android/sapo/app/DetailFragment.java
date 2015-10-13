@@ -39,25 +39,23 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FetchTiendaIdTask fetchTiendaIdTask = new FetchTiendaIdTask();
-        fetchTiendaIdTask.execute();
-
-
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         Intent intent = getActivity().getIntent();
+        Integer text = 0;
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-            /*((TextView) rootView.findViewById(R.id.detail_text))
-                    .setText(text);*/
+             text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
             textView = (TextView) rootView.findViewById(R.id.detail_text);
-            textView.setText(text + "A!");
+            //textView.setText(text + "A!");
         }
-        Log.v(LOG_TAG, "Setea el texto.");
+
+        FetchTiendaIdTask fetchTiendaIdTask = new FetchTiendaIdTask();
+        fetchTiendaIdTask.execute((int) text);
+
         return rootView;
     }
 
-    public class FetchTiendaIdTask extends AsyncTask<Void, Void, String[]> {
+    public class FetchTiendaIdTask extends AsyncTask<Integer, Void, String[]> {
 
         private final String LOG_TAG = FetchTiendaIdTask.class.getSimpleName();
 
@@ -70,11 +68,11 @@ public class DetailFragment extends Fragment {
                 JSONObject categoria = categorias.getJSONObject(i);
                 resultStrs[i] = categoria.getString("nombre");
             }
-            return  resultStrs;
+            return resultStrs;
         }
 
         @Override
-        protected String[] doInBackground(Void... voids) {
+        protected String[] doInBackground(Integer... integers) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -85,7 +83,7 @@ public class DetailFragment extends Fragment {
                 final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-                final String ALMACENID_VALUE = "2";
+                final String ALMACENID_VALUE = integers[0].toString();
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                         .appendPath(ALMACENID_VALUE)
@@ -150,7 +148,11 @@ public class DetailFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
-            textView.setText(result[0]+ "B!");
+            if (result == null || result.length == 0)
+                textView.setText("No hay categorias.");
+            else
+                textView.setText(result[0]);
+
         }
     }
 }

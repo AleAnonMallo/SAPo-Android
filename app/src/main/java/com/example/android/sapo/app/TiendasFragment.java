@@ -17,6 +17,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.android.sapo.app.adapters.TiendaAdapter;
+import com.example.android.sapo.app.datatypes.DataTienda;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +35,7 @@ import java.util.List;
 
 public class TiendasFragment extends Fragment {
 
-    private ArrayAdapter<String> tiendasAdapter;
+    private TiendaAdapter tiendasAdapter;
 
     public TiendasFragment() {
     }
@@ -60,14 +63,13 @@ public class TiendasFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        List<String> list = new ArrayList<String>();
+        List<DataTienda> list = new ArrayList<DataTienda>();
 
         tiendasAdapter =
-                new ArrayAdapter<String>(
+                new TiendaAdapter(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_forecast, // The name of the layout ID.
-                        R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        list);
+                        (ArrayList<DataTienda>) list);
 
         FetchTiendasTask tiendasTask = new FetchTiendasTask();
         tiendasTask.execute();
@@ -81,7 +83,7 @@ public class TiendasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Context context = getActivity();
-                CharSequence text = tiendasAdapter.getItem(i);
+                int text = tiendasAdapter.getItem(i).getId();
                 Intent intent = new Intent(getActivity(), DetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, text);
                 startActivity(intent);
@@ -91,25 +93,25 @@ public class TiendasFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchTiendasTask extends AsyncTask<Void, Void, String[]> {
+    public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
 
         private final String LOG_TAG = FetchTiendasTask.class.getSimpleName();
 
-        private String[] getAlmacenes(String JsonStr) throws JSONException {
+        private DataTienda[] getAlmacenes(String JsonStr) throws JSONException {
             Log.v(LOG_TAG, "getAlmacenes");
             JSONArray aJson = new JSONArray(JsonStr);
-            String[] resultStrs = new String[aJson.length()];
+            DataTienda[] resultStrs = new DataTienda[aJson.length()];
             for(int i = 0; i < aJson.length(); i++) {
                 JSONObject oJson = aJson.getJSONObject(i);
-
-                resultStrs[i] = oJson.getString("nombre");
+                resultStrs[i] = new DataTienda();
+                resultStrs[i].setNombre(oJson.getString("nombre"));
+                resultStrs[i].setId((int) oJson.getInt("id"));
             }
-
             return  resultStrs;
         }
 
         @Override
-        protected String[] doInBackground(Void... voids) {
+        protected DataTienda[] doInBackground(Void... voids) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -182,10 +184,10 @@ public class TiendasFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String[] result) {
+        protected void onPostExecute(DataTienda[] result) {
             if (result != null) {
                 tiendasAdapter.clear();
-                for(String dayForecastStr : result) {
+                for(DataTienda dayForecastStr : result) {
                     tiendasAdapter.add(dayForecastStr);
                 }
             }

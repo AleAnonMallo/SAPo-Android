@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:id="@+id/title_activity_detail"
             android:name="com.example.android.sapo.app.DetailActivity"
             android:label="@string/title_activity_detail"
             android:parentActivityName="com.example.android.sapo.app.MainActivity" >
