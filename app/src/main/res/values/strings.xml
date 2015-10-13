@@ -18,6 +18,7 @@
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="hello_world"></string>
     <string name="title_activity_detail">Details</string>
+    <string name="title_activity_productos">Producto: </string>
 
 
 </resources>

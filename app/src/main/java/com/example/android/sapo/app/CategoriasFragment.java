@@ -8,16 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.example.android.sapo.app.adapters.TiendaAdapter;
-import com.example.android.sapo.app.datatypes.DataTienda;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,85 +27,78 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TiendasFragment extends Fragment {
+/**
+ * Created by Alejandro on 12-Oct-15.
+ */
+public class CategoriasFragment extends Fragment {
 
-    private TiendaAdapter tiendasAdapter;
+    private final String LOG_TAG = CategoriasFragment.class.getSimpleName();
+    //private TextView textView;
+    private ArrayAdapter<String> categoriasAdapter;
 
-    public TiendasFragment() {
+    public CategoriasFragment(){
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Add this line in order for this fragment to handle menu events.
-        setHasOptionsMenu(true);
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecastfragment, menu);
-    }
+        List<String> list = new ArrayList<String>();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        List<DataTienda> list = new ArrayList<DataTienda>();
-
-        tiendasAdapter =
-                new TiendaAdapter(
+        categoriasAdapter =
+                new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
-                        R.layout.list_item_tiendas, // The name of the layout ID.
-                        (ArrayList<DataTienda>) list);
+                        R.layout.list_item_categorias, // The name of the layout ID.
+                        R.id.list_item_categoria,
+                        list);
 
-        FetchTiendasTask tiendasTask = new FetchTiendasTask();
-        tiendasTask.execute();
+        View rootView = inflater.inflate(R.layout.fragment_categorias, container, false);
 
-        View rootView = inflater.inflate(R.layout.fragment_tiendas, container, false);
-        // Get a reference to the ListView, and attach this adapter to it.
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_tiendas);
-        listView.setAdapter(tiendasAdapter);
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_categorias);
+        listView.setAdapter(categoriasAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Context context = getActivity();
-                int text = tiendasAdapter.getItem(i).getId();
-                Intent intent = new Intent(getActivity(), CategoriasActivity.class)
+                String text = categoriasAdapter.getItem(i);
+                Intent intent = new Intent(getActivity(), ProductosActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, text);
                 startActivity(intent);
             }
         });
 
+        Intent intent = getActivity().getIntent();
+        Integer text = 0;
+        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+             text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
+        }
+
+
+
+        FetchTiendaIdTask fetchTiendaIdTask = new FetchTiendaIdTask();
+        fetchTiendaIdTask.execute((int) text);
+
         return rootView;
     }
 
-    public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
+    public class FetchTiendaIdTask extends AsyncTask<Integer, Void, String[]> {
 
-        private final String LOG_TAG = FetchTiendasTask.class.getSimpleName();
+        private final String LOG_TAG = FetchTiendaIdTask.class.getSimpleName();
 
-        private DataTienda[] getAlmacenes(String JsonStr) throws JSONException {
-            Log.v(LOG_TAG, "getAlmacenes");
-            JSONArray aJson = new JSONArray(JsonStr);
-            DataTienda[] resultStrs = new DataTienda[aJson.length()];
-            for(int i = 0; i < aJson.length(); i++) {
-                JSONObject oJson = aJson.getJSONObject(i);
-                resultStrs[i] = new DataTienda();
-                resultStrs[i].setNombre(oJson.getString("nombre"));
-                resultStrs[i].setId((int) oJson.getInt("id"));
+        private String[] getAlmacenes(String JsonStr) throws JSONException {
+            JSONObject oJson = new JSONObject(JsonStr);
+            JSONArray categorias = oJson.getJSONArray("categorias");
+            String[] resultStrs = new String[categorias.length()];
+
+            for(int i = 0; i < categorias.length(); i++) {
+                JSONObject categoria = categorias.getJSONObject(i);
+                resultStrs[i] = categoria.getString("nombre");
             }
-            return  resultStrs;
+            return resultStrs;
         }
 
         @Override
-        protected DataTienda[] doInBackground(Void... voids) {
+        protected String[] doInBackground(Integer... integers) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -121,8 +109,10 @@ public class TiendasFragment extends Fragment {
                 final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
+                final String ALMACENID_VALUE = integers[0].toString();
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
+                        .appendPath(ALMACENID_VALUE)
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -183,11 +173,11 @@ public class TiendasFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(DataTienda[] result) {
+        protected void onPostExecute(String[] result) {
             if (result != null) {
-                tiendasAdapter.clear();
-                for(DataTienda dayForecastStr : result) {
-                    tiendasAdapter.add(dayForecastStr);
+                categoriasAdapter.clear();
+                for(String dayForecastStr : result) {
+                    categoriasAdapter.add(dayForecastStr);
                 }
             }
         }

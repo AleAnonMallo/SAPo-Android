@@ -30,10 +30,10 @@ public class TiendaAdapter extends ArrayAdapter<DataTienda> {
         ViewHolder viewHolder = new ViewHolder();
         if (convertView == null) {
             convertView = LayoutInflater.from(this.getContext())
-                    .inflate(R.layout.list_item, parent, false);
+                    .inflate(R.layout.list_item_tiendas, parent, false);
 
 
-            viewHolder.itemView = (TextView) convertView.findViewById(R.id.list_item_textview);
+            viewHolder.itemView = (TextView) convertView.findViewById(R.id.list_item_tienda);
 
             convertView.setTag(viewHolder);
         } else {

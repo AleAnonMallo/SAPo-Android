@@ -13,15 +13,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-
-import com.example.android.sapo.app.adapters.TiendaAdapter;
-import com.example.android.sapo.app.datatypes.DataTienda;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,15 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Alejandro on 12-Oct-15.
+ * Created by Alejandro on 13-Oct-15.
  */
-public class DetailFragment extends Fragment {
+public class ProductosFragment extends Fragment {
 
-    private final String LOG_TAG = DetailFragment.class.getSimpleName();
-    //private TextView textView;
-    private ArrayAdapter<String> categoriasAdapter;
+    private final String LOG_TAG = ProductosFragment.class.getSimpleName();
+    private ArrayAdapter<String> productosAdapter;
 
-    public DetailFragment(){
+    public ProductosFragment(){
     }
 
     @Override
@@ -49,24 +43,24 @@ public class DetailFragment extends Fragment {
 
         List<String> list = new ArrayList<String>();
 
-        categoriasAdapter =
+        productosAdapter =
                 new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_categorias, // The name of the layout ID.
                         R.id.list_item_categoria,
                         list);
 
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_categorias, container, false);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_categorias);
-        listView.setAdapter(categoriasAdapter);
+        listView.setAdapter(productosAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Context context = getActivity();
-                String text = categoriasAdapter.getItem(i);
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                String text = productosAdapter.getItem(i);
+                Intent intent = new Intent(getActivity(), ProductosActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, text);
                 startActivity(intent);
             }
@@ -75,7 +69,7 @@ public class DetailFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         Integer text = 0;
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-             text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
+            text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
         }
 
 
@@ -180,9 +174,9 @@ public class DetailFragment extends Fragment {
         @Override
         protected void onPostExecute(String[] result) {
             if (result != null) {
-                categoriasAdapter.clear();
+                productosAdapter.clear();
                 for(String dayForecastStr : result) {
-                    categoriasAdapter.add(dayForecastStr);
+                    productosAdapter.add(dayForecastStr);
                 }
             }
         }
