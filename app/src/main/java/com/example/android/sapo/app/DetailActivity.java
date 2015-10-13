@@ -54,34 +54,6 @@ public class DetailActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
-
-
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public static class DetailFragment extends Fragment {
-
-        private final String LOG_TAG = DetailFragment.class.getSimpleName();
-
-        public DetailFragment(){
-
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
-            Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.detail_text))
-                        .setText(text);
-            }
-            Log.v(LOG_TAG, "Setea el texto.");
-
-            return rootView;
-        }
     }
 }

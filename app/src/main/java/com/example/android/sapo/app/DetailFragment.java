@@ -1,6 +1,5 @@
 package com.example.android.sapo.app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -8,18 +7,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,81 +25,51 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TiendasFragment extends Fragment {
+/**
+ * Created by Alejandro on 12-Oct-15.
+ */
+public class DetailFragment extends Fragment {
 
-    private ArrayAdapter<String> tiendasAdapter;
+    private final String LOG_TAG = DetailFragment.class.getSimpleName();
+    private TextView textView;
 
-    public TiendasFragment() {
+    public DetailFragment(){
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // Add this line in order for this fragment to handle menu events.
-        setHasOptionsMenu(true);
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecastfragment, menu);
-    }
+        FetchTiendaIdTask fetchTiendaIdTask = new FetchTiendaIdTask();
+        fetchTiendaIdTask.execute();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return super.onOptionsItemSelected(item);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        List<String> list = new ArrayList<String>();
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        tiendasAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.list_item_forecast, // The name of the layout ID.
-                        R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        list);
-
-        FetchTiendasTask tiendasTask = new FetchTiendasTask();
-        tiendasTask.execute();
-
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        // Get a reference to the ListView, and attach this adapter to it.
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listView.setAdapter(tiendasAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Context context = getActivity();
-                CharSequence text = tiendasAdapter.getItem(i);
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, text);
-                startActivity(intent);
-            }
-        });
-
+        Intent intent = getActivity().getIntent();
+        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+            String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+            /*((TextView) rootView.findViewById(R.id.detail_text))
+                    .setText(text);*/
+            textView = (TextView) rootView.findViewById(R.id.detail_text);
+            textView.setText(text + "A!");
+        }
+        Log.v(LOG_TAG, "Setea el texto.");
         return rootView;
     }
 
-    public class FetchTiendasTask extends AsyncTask<Void, Void, String[]> {
+    public class FetchTiendaIdTask extends AsyncTask<Void, Void, String[]> {
 
-        private final String LOG_TAG = FetchTiendasTask.class.getSimpleName();
+        private final String LOG_TAG = FetchTiendaIdTask.class.getSimpleName();
 
         private String[] getAlmacenes(String JsonStr) throws JSONException {
-            Log.v(LOG_TAG, "getAlmacenes");
-            JSONArray aJson = new JSONArray(JsonStr);
-            String[] resultStrs = new String[aJson.length()];
-            for(int i = 0; i < aJson.length(); i++) {
-                JSONObject oJson = aJson.getJSONObject(i);
+            JSONObject oJson = new JSONObject(JsonStr);
+            JSONArray categorias = oJson.getJSONArray("categorias");
+            String[] resultStrs = new String[categorias.length()];
 
-                resultStrs[i] = oJson.getString("nombre");
+            for(int i = 0; i < categorias.length(); i++) {
+                JSONObject categoria = categorias.getJSONObject(i);
+                resultStrs[i] = categoria.getString("nombre");
             }
-
             return  resultStrs;
         }
 
@@ -120,8 +85,10 @@ public class TiendasFragment extends Fragment {
                 final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
+                final String ALMACENID_VALUE = "2";
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
+                        .appendPath(ALMACENID_VALUE)
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -183,12 +150,7 @@ public class TiendasFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
-            if (result != null) {
-                tiendasAdapter.clear();
-                for(String dayForecastStr : result) {
-                    tiendasAdapter.add(dayForecastStr);
-                }
-            }
+            textView.setText(result[0]+ "B!");
         }
     }
 }
