@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.android.sapo.app.adapters.TiendaAdapter;
@@ -68,7 +67,7 @@ public class TiendasFragment extends Fragment {
         tiendasAdapter =
                 new TiendaAdapter(
                         getActivity(), // The current context (this activity)
-                        R.layout.list_item_forecast, // The name of the layout ID.
+                        R.layout.list_item, // The name of the layout ID.
                         (ArrayList<DataTienda>) list);
 
         FetchTiendasTask tiendasTask = new FetchTiendasTask();

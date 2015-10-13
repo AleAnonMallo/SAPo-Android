@@ -15,13 +15,13 @@ import java.util.ArrayList;
 /**
  * Created by Alejandro on 13-Oct-15.
  */
-public class TiendaAdapter extends ArrayAdapter<DataTienda> {
+public class CategoriaAdapter extends ArrayAdapter<DataTienda> {
 
     private static class ViewHolder {
         private TextView itemView;
     }
 
-    public TiendaAdapter(Context context, int textViewResourceId, ArrayList<DataTienda> items) {
+    public CategoriaAdapter(Context context, int textViewResourceId, ArrayList<DataTienda> items) {
         super(context, textViewResourceId, items);
     }
 

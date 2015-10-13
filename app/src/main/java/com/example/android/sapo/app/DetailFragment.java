@@ -1,5 +1,6 @@
 package com.example.android.sapo.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -9,7 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.android.sapo.app.adapters.TiendaAdapter;
+import com.example.android.sapo.app.datatypes.DataTienda;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +38,8 @@ import java.util.List;
 public class DetailFragment extends Fragment {
 
     private final String LOG_TAG = DetailFragment.class.getSimpleName();
-    private TextView textView;
+    //private TextView textView;
+    private ArrayAdapter<String> categoriasAdapter;
 
     public DetailFragment(){
     }
@@ -39,15 +47,38 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        List<String> list = new ArrayList<String>();
+
+        categoriasAdapter =
+                new ArrayAdapter<String>(
+                        getActivity(), // The current context (this activity)
+                        R.layout.list_item_categorias, // The name of the layout ID.
+                        R.id.list_item_categoria,
+                        list);
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_categorias);
+        listView.setAdapter(categoriasAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Context context = getActivity();
+                String text = categoriasAdapter.getItem(i);
+                Intent intent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, text);
+                startActivity(intent);
+            }
+        });
 
         Intent intent = getActivity().getIntent();
         Integer text = 0;
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
              text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
-            textView = (TextView) rootView.findViewById(R.id.detail_text);
-            //textView.setText(text + "A!");
         }
+
+
 
         FetchTiendaIdTask fetchTiendaIdTask = new FetchTiendaIdTask();
         fetchTiendaIdTask.execute((int) text);
@@ -148,11 +179,12 @@ public class DetailFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String[] result) {
-            if (result == null || result.length == 0)
-                textView.setText("No hay categorias.");
-            else
-                textView.setText(result[0]);
-
+            if (result != null) {
+                categoriasAdapter.clear();
+                for(String dayForecastStr : result) {
+                    categoriasAdapter.add(dayForecastStr);
+                }
+            }
         }
     }
 }
