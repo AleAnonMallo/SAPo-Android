@@ -8,20 +8,22 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.android.sapo.app.R;
-import com.example.android.sapo.app.datatypes.DataTienda;
+import com.example.android.sapo.app.datatypes.DataCategoria;
+import com.example.android.sapo.app.datatypes.DataProducto;
 
 import java.util.ArrayList;
 
 /**
- * Created by Alejandro on 13-Oct-15.
+ * Created by Alejandro on 14/10/2015.
  */
-public class TiendaAdapter extends ArrayAdapter<DataTienda> {
+public class ProductoAdapter extends ArrayAdapter<DataProducto> {
 
     private static class ViewHolder {
-        private TextView itemView;
+        private TextView listProductoNombre;
+        private TextView listProductoDescripcion;
     }
 
-    public TiendaAdapter(Context context, int textViewResourceId, ArrayList<DataTienda> items) {
+    public ProductoAdapter(Context context, int textViewResourceId, ArrayList<DataProducto> items) {
         super(context, textViewResourceId, items);
     }
 
@@ -30,23 +32,23 @@ public class TiendaAdapter extends ArrayAdapter<DataTienda> {
         ViewHolder viewHolder = new ViewHolder();
         if (convertView == null) {
             convertView = LayoutInflater.from(this.getContext())
-                    .inflate(R.layout.list_item_tiendas, parent, false);
+                    .inflate(R.layout.list_item_productos, parent, false);
 
-
-            viewHolder.itemView = (TextView) convertView.findViewById(R.id.list_item_tienda);
-
+            viewHolder.listProductoNombre = (TextView) convertView.findViewById(R.id.list_producto_nombre);
+            viewHolder.listProductoDescripcion = (TextView) convertView.findViewById(R.id.list_producto_descripcion);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        DataTienda item = getItem(position);
+        DataProducto item = getItem(position);
         if (item!= null) {
             // My layout has only one TextView
             // do whatever you want with your string and long
             //viewHolder.itemView.setText(String.format("%d %s", item.getId(), item.getNombre()));
-            viewHolder.itemView.setText(item.getNombre());
+            viewHolder.listProductoNombre.setText(item.getNombre());
+            viewHolder.listProductoDescripcion.setText(item.getDescripcion().substring(0,7) + "...");
         }
 
         return convertView;

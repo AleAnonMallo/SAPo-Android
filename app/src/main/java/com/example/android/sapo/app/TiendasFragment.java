@@ -47,11 +47,6 @@ public class TiendasFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecastfragment, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -82,9 +77,8 @@ public class TiendasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Context context = getActivity();
-                int text = tiendasAdapter.getItem(i).getId();
                 Intent intent = new Intent(getActivity(), CategoriasActivity.class)
-                        .putExtra("almacenID", text)
+                        .putExtra("almacenID", tiendasAdapter.getItem(i).getId())
                         .putExtra("almacenNombre", tiendasAdapter.getItem(i).getNombre());
 
                 startActivity(intent);
@@ -188,8 +182,8 @@ public class TiendasFragment extends Fragment {
         protected void onPostExecute(DataTienda[] result) {
             if (result != null) {
                 tiendasAdapter.clear();
-                for(DataTienda dayForecastStr : result) {
-                    tiendasAdapter.add(dayForecastStr);
+                for(DataTienda r : result) {
+                    tiendasAdapter.add(r);
                 }
             }
         }

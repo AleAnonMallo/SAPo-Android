@@ -15,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.android.sapo.app.adapters.ProductoAdapter;
+import com.example.android.sapo.app.datatypes.DataProducto;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +37,8 @@ import java.util.List;
 public class ProductosFragment extends Fragment {
 
     private final String LOG_TAG = ProductosFragment.class.getSimpleName();
-    private ArrayAdapter<String> productosAdapter;
+    //private ArrayAdapter<String> productosAdapter;
+    private ProductoAdapter productosAdapter;
     private Integer almacenID;
 
     public ProductosFragment(){
@@ -43,14 +47,13 @@ public class ProductosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        List<String> list = new ArrayList<String>();
+        List<DataProducto> list = new ArrayList<DataProducto>();
 
         productosAdapter =
-                new ArrayAdapter<String>(
+                new ProductoAdapter(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_productos, // The name of the layout ID.
-                        R.id.list_item_producto,
-                        list);
+                        (ArrayList<DataProducto>) list);
 
         View rootView = inflater.inflate(R.layout.fragment_productos, container, false);
 
@@ -61,9 +64,9 @@ public class ProductosFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Context context = getActivity();
-                String text = productosAdapter.getItem(i);
-                Intent intent = new Intent(getActivity(), ProductosActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, text);
+
+                Intent intent = new Intent(getActivity(), DetalleProductoActivity.class)
+                        .putExtra("productoID", productosAdapter.getItem(i).getIdProducto());
                 startActivity(intent);
             }
         });
@@ -89,22 +92,25 @@ public class ProductosFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchProductosTask extends AsyncTask<Integer, Void, String[]> {
+    public class FetchProductosTask extends AsyncTask<Integer, Void, DataProducto[]> {
 
         private final String LOG_TAG = FetchProductosTask.class.getSimpleName();
 
-        private String[] getProductos(String JsonStr) throws JSONException {
+        private DataProducto[] getProductos(String JsonStr) throws JSONException {
             JSONArray jsonArray = new JSONArray(JsonStr);
-            String[] resultStrs = new String[jsonArray.length()];
+            DataProducto[] resultStrs = new DataProducto[jsonArray.length()];
             for(int i = 0; i < jsonArray.length(); i++) {
                 JSONObject producto = jsonArray.getJSONObject(i);
-                resultStrs[i] = producto.getString("nombre");
+                resultStrs[i] = new DataProducto();
+                resultStrs[i].setNombre(producto.getString("nombre"));
+                resultStrs[i].setIdProducto(producto.getInt("id"));
+                resultStrs[i].setDescripcion(producto.getString("descripcion"));
             }
             return resultStrs;
         }
 
         @Override
-        protected String[] doInBackground(Integer... integers) {
+        protected DataProducto[] doInBackground(Integer... integers) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -183,10 +189,10 @@ public class ProductosFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String[] result) {
+        protected void onPostExecute(DataProducto[] result) {
             if (result != null) {
                 productosAdapter.clear();
-                for(String r : result) {
+                for(DataProducto r : result) {
                     productosAdapter.add(r);
                 }
             }
