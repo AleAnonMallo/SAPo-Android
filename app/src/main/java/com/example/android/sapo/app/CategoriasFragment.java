@@ -1,5 +1,6 @@
 package com.example.android.sapo.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,7 +37,6 @@ import java.util.List;
 public class CategoriasFragment extends Fragment {
 
     private final String LOG_TAG = CategoriasFragment.class.getSimpleName();
-    //private ArrayAdapter<String> categoriasAdapter;
     private CategoriaAdapter categoriasAdapter;
     private Integer almacenID;
 
@@ -63,9 +63,9 @@ public class CategoriasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Context context = getActivity();
-                int text = categoriasAdapter.getItem(i).getIdCategoria();
                 Intent intent = new Intent(getActivity(), ProductosActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, text)
+                        .putExtra("categoriaID", categoriasAdapter.getItem(i).getIdCategoria())
+                        .putExtra("categoriaNombre", categoriasAdapter.getItem(i).getNombre())
                         .putExtra("almacenID", almacenID);
                 startActivity(intent);
             }
@@ -73,9 +73,11 @@ public class CategoriasFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
         almacenID = 0;
-        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            almacenID = intent.getIntExtra(Intent.EXTRA_TEXT,0);
+        if (intent != null && intent.hasExtra("almacenID")) {
+            almacenID = intent.getIntExtra("almacenID",0);
         }
+        Activity activity = getActivity();
+        activity.setTitle(intent.getStringExtra("almacenNombre"));
 
         FetchCategoriasTask fetchCategoriasTask = new FetchCategoriasTask();
         fetchCategoriasTask.execute(almacenID);

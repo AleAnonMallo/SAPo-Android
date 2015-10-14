@@ -84,7 +84,9 @@ public class TiendasFragment extends Fragment {
                 Context context = getActivity();
                 int text = tiendasAdapter.getItem(i).getId();
                 Intent intent = new Intent(getActivity(), CategoriasActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, text);
+                        .putExtra("almacenID", text)
+                        .putExtra("almacenNombre", tiendasAdapter.getItem(i).getNombre());
+
                 startActivity(intent);
             }
         });

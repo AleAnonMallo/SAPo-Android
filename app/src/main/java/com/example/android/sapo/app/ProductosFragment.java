@@ -1,5 +1,6 @@
 package com.example.android.sapo.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -68,18 +69,19 @@ public class ProductosFragment extends Fragment {
         });
 
         Intent intent = getActivity().getIntent();
-        Integer text = 0;
-        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
+        Integer categoriaID = 0;
+        String categoriaNombre = "";
+        if (intent != null && intent.hasExtra("categoriaID")) {
+            categoriaID = intent.getIntExtra("categoriaID",0);
             almacenID = intent.getIntExtra("almacenID", 0);
+            categoriaNombre = intent.getStringExtra("categoriaNombre");
         }
         Integer[] param = new Integer[2];
         param[0] = almacenID;
-        param[1] = text;
+        param[1] = categoriaID;
 
-        Log.v(LOG_TAG,"PARAM.LENGTH " + param.length);
-        Log.v(LOG_TAG,"PARAM[0] " + param[0]);
-        Log.v(LOG_TAG,"PARAM[1] " + param[1]);
+        Activity activity = getActivity();
+        activity.setTitle(categoriaNombre);
 
         FetchProductosTask fetchProductosTask = new FetchProductosTask();
         fetchProductosTask.execute(param);
@@ -111,18 +113,15 @@ public class ProductosFragment extends Fragment {
 
             try {
                 final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes/";
-                final String SAPO_APPEND_URL1 = "productos";
-                final String SAPO_APPEND_URL2 = "categoria";
+                final String SAPO_APPEND_URL = "productos/categoria";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
                 final String ALMACENID_VALUE = integers[0].toString();
-                //final String ALMACENID_VALUE = "16";
                 final String CATEGORIAID_VALUE = integers[1].toString();
-                //final String CATEGORIAID_VALUE = "5";
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                         .appendPath(ALMACENID_VALUE)
-                        .appendPath(SAPO_APPEND_URL1).appendPath(SAPO_APPEND_URL2)
+                        .appendEncodedPath(SAPO_APPEND_URL)
                         .appendPath(CATEGORIAID_VALUE)
                         .build();
 
