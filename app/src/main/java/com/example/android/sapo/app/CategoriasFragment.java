@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.android.sapo.app.adapters.CategoriaAdapter;
+import com.example.android.sapo.app.datatypes.DataCategoria;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,8 +36,9 @@ import java.util.List;
 public class CategoriasFragment extends Fragment {
 
     private final String LOG_TAG = CategoriasFragment.class.getSimpleName();
-    //private TextView textView;
-    private ArrayAdapter<String> categoriasAdapter;
+    //private ArrayAdapter<String> categoriasAdapter;
+    private CategoriaAdapter categoriasAdapter;
+    private Integer almacenID;
 
     public CategoriasFragment(){
     }
@@ -42,14 +46,13 @@ public class CategoriasFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        List<String> list = new ArrayList<String>();
+        List<DataCategoria> list = new ArrayList<DataCategoria>();
 
         categoriasAdapter =
-                new ArrayAdapter<String>(
+                new CategoriaAdapter(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_categorias, // The name of the layout ID.
-                        R.id.list_item_categoria,
-                        list);
+                        (ArrayList<DataCategoria>) list);
 
         View rootView = inflater.inflate(R.layout.fragment_categorias, container, false);
 
@@ -60,45 +63,46 @@ public class CategoriasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Context context = getActivity();
-                String text = categoriasAdapter.getItem(i);
+                int text = categoriasAdapter.getItem(i).getIdCategoria();
                 Intent intent = new Intent(getActivity(), ProductosActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, text);
+                        .putExtra(Intent.EXTRA_TEXT, text)
+                        .putExtra("almacenID", almacenID);
                 startActivity(intent);
             }
         });
 
         Intent intent = getActivity().getIntent();
-        Integer text = 0;
+        almacenID = 0;
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-             text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
+            almacenID = intent.getIntExtra(Intent.EXTRA_TEXT,0);
         }
 
-
-
         FetchCategoriasTask fetchCategoriasTask = new FetchCategoriasTask();
-        fetchCategoriasTask.execute((int) text);
+        fetchCategoriasTask.execute(almacenID);
 
         return rootView;
     }
 
-    public class FetchCategoriasTask extends AsyncTask<Integer, Void, String[]> {
+    public class FetchCategoriasTask extends AsyncTask<Integer, Void, DataCategoria[]> {
 
         private final String LOG_TAG = FetchCategoriasTask.class.getSimpleName();
 
-        private String[] getCategorias(String JsonStr) throws JSONException {
+        private DataCategoria[] getCategorias(String JsonStr) throws JSONException {
             JSONObject oJson = new JSONObject(JsonStr);
             JSONArray categorias = oJson.getJSONArray("categorias");
-            String[] resultStrs = new String[categorias.length()];
+            DataCategoria[] resultStrs = new DataCategoria[categorias.length()];
 
             for(int i = 0; i < categorias.length(); i++) {
                 JSONObject categoria = categorias.getJSONObject(i);
-                resultStrs[i] = categoria.getString("nombre");
+                resultStrs[i] = new DataCategoria();
+                resultStrs[i].setNombre(categoria.getString("nombre"));
+                resultStrs[i].setIdCategoria(categoria.getInt("id"));
             }
             return resultStrs;
         }
 
         @Override
-        protected String[] doInBackground(Integer... integers) {
+        protected DataCategoria[] doInBackground(Integer... integers) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -173,11 +177,11 @@ public class CategoriasFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String[] result) {
+        protected void onPostExecute(DataCategoria[] result) {
             if (result != null) {
                 categoriasAdapter.clear();
-                for(String dayForecastStr : result) {
-                    categoriasAdapter.add(dayForecastStr);
+                for(DataCategoria r : result) {
+                    categoriasAdapter.add(r);
                 }
             }
         }

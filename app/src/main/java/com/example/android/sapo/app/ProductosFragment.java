@@ -34,6 +34,7 @@ public class ProductosFragment extends Fragment {
 
     private final String LOG_TAG = ProductosFragment.class.getSimpleName();
     private ArrayAdapter<String> productosAdapter;
+    private Integer almacenID;
 
     public ProductosFragment(){
     }
@@ -70,10 +71,18 @@ public class ProductosFragment extends Fragment {
         Integer text = 0;
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
             text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
+            almacenID = intent.getIntExtra("almacenID", 0);
         }
+        Integer[] param = new Integer[2];
+        param[0] = almacenID;
+        param[1] = text;
+
+        Log.v(LOG_TAG,"PARAM.LENGTH " + param.length);
+        Log.v(LOG_TAG,"PARAM[0] " + param[0]);
+        Log.v(LOG_TAG,"PARAM[1] " + param[1]);
 
         FetchProductosTask fetchProductosTask = new FetchProductosTask();
-        fetchProductosTask.execute((int) text);
+        fetchProductosTask.execute(param);
 
         return rootView;
     }
@@ -106,10 +115,10 @@ public class ProductosFragment extends Fragment {
                 final String SAPO_APPEND_URL2 = "categoria";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-                //final String ALMACENID_VALUE = integers[0].toString();
-                final String ALMACENID_VALUE = "16";
-                //final String CATEGORIAID_VALUE = integers[1].toString();
-                final String CATEGORIAID_VALUE = "5";
+                final String ALMACENID_VALUE = integers[0].toString();
+                //final String ALMACENID_VALUE = "16";
+                final String CATEGORIAID_VALUE = integers[1].toString();
+                //final String CATEGORIAID_VALUE = "5";
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                         .appendPath(ALMACENID_VALUE)

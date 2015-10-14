@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.android.sapo.app.R;
+import com.example.android.sapo.app.datatypes.DataCategoria;
 import com.example.android.sapo.app.datatypes.DataTienda;
 
 import java.util.ArrayList;
@@ -15,13 +16,13 @@ import java.util.ArrayList;
 /**
  * Created by Alejandro on 13-Oct-15.
  */
-public class CategoriaAdapter extends ArrayAdapter<DataTienda> {
+public class CategoriaAdapter extends ArrayAdapter<DataCategoria> {
 
     private static class ViewHolder {
         private TextView itemView;
     }
 
-    public CategoriaAdapter(Context context, int textViewResourceId, ArrayList<DataTienda> items) {
+    public CategoriaAdapter(Context context, int textViewResourceId, ArrayList<DataCategoria> items) {
         super(context, textViewResourceId, items);
     }
 
@@ -30,17 +31,17 @@ public class CategoriaAdapter extends ArrayAdapter<DataTienda> {
         ViewHolder viewHolder = new ViewHolder();
         if (convertView == null) {
             convertView = LayoutInflater.from(this.getContext())
-                    .inflate(R.layout.list_item_tiendas, parent, false);
+                    .inflate(R.layout.list_item_categorias, parent, false);
 
 
-            viewHolder.itemView = (TextView) convertView.findViewById(R.id.list_item_tienda);
+            viewHolder.itemView = (TextView) convertView.findViewById(R.id.list_item_categoria);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        DataTienda item = getItem(position);
+        DataCategoria item = getItem(position);
         if (item!= null) {
             // My layout has only one TextView
             // do whatever you want with your string and long
