@@ -75,17 +75,17 @@ public class CategoriasFragment extends Fragment {
 
 
 
-        FetchTiendaIdTask fetchTiendaIdTask = new FetchTiendaIdTask();
-        fetchTiendaIdTask.execute((int) text);
+        FetchCategoriasTask fetchCategoriasTask = new FetchCategoriasTask();
+        fetchCategoriasTask.execute((int) text);
 
         return rootView;
     }
 
-    public class FetchTiendaIdTask extends AsyncTask<Integer, Void, String[]> {
+    public class FetchCategoriasTask extends AsyncTask<Integer, Void, String[]> {
 
-        private final String LOG_TAG = FetchTiendaIdTask.class.getSimpleName();
+        private final String LOG_TAG = FetchCategoriasTask.class.getSimpleName();
 
-        private String[] getAlmacenes(String JsonStr) throws JSONException {
+        private String[] getCategorias(String JsonStr) throws JSONException {
             JSONObject oJson = new JSONObject(JsonStr);
             JSONArray categorias = oJson.getJSONArray("categorias");
             String[] resultStrs = new String[categorias.length()];
@@ -164,7 +164,7 @@ public class CategoriasFragment extends Fragment {
 
             try {
                 //Parsea el JSON.
-                return getAlmacenes(JsonStr);
+                return getCategorias(JsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();

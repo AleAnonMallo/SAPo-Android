@@ -13,7 +13,7 @@ public class TiendasActivity extends ActionBarActivity {
         setContentView(R.layout.activity_tiendas);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_main, new TiendasFragment())
+                    .add(R.id.container_tiendas, new TiendasFragment())
                     .commit();
         }
 

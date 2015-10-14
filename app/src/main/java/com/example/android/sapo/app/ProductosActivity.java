@@ -13,10 +13,10 @@ public class ProductosActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categorias);
+        setContentView(R.layout.activity_productos);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_categorias, new CategoriasFragment())
+                    .add(R.id.container_productos, new ProductosFragment())
                     .commit();
         }
     }

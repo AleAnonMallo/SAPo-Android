@@ -46,13 +46,13 @@ public class ProductosFragment extends Fragment {
         productosAdapter =
                 new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
-                        R.layout.list_item_categorias, // The name of the layout ID.
-                        R.id.list_item_categoria,
+                        R.layout.list_item_productos, // The name of the layout ID.
+                        R.id.list_item_producto,
                         list);
 
-        View rootView = inflater.inflate(R.layout.fragment_categorias, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_productos, container, false);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.listview_categorias);
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_productos);
         listView.setAdapter(productosAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
@@ -72,26 +72,22 @@ public class ProductosFragment extends Fragment {
             text = intent.getIntExtra(Intent.EXTRA_TEXT,0);
         }
 
-
-
-        FetchTiendaIdTask fetchTiendaIdTask = new FetchTiendaIdTask();
-        fetchTiendaIdTask.execute((int) text);
+        FetchProductosTask fetchProductosTask = new FetchProductosTask();
+        fetchProductosTask.execute((int) text);
 
         return rootView;
     }
 
-    public class FetchTiendaIdTask extends AsyncTask<Integer, Void, String[]> {
+    public class FetchProductosTask extends AsyncTask<Integer, Void, String[]> {
 
-        private final String LOG_TAG = FetchTiendaIdTask.class.getSimpleName();
+        private final String LOG_TAG = FetchProductosTask.class.getSimpleName();
 
-        private String[] getAlmacenes(String JsonStr) throws JSONException {
-            JSONObject oJson = new JSONObject(JsonStr);
-            JSONArray categorias = oJson.getJSONArray("categorias");
-            String[] resultStrs = new String[categorias.length()];
-
-            for(int i = 0; i < categorias.length(); i++) {
-                JSONObject categoria = categorias.getJSONObject(i);
-                resultStrs[i] = categoria.getString("nombre");
+        private String[] getProductos(String JsonStr) throws JSONException {
+            JSONArray jsonArray = new JSONArray(JsonStr);
+            String[] resultStrs = new String[jsonArray.length()];
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject producto = jsonArray.getJSONObject(i);
+                resultStrs[i] = producto.getString("nombre");
             }
             return resultStrs;
         }
@@ -105,13 +101,20 @@ public class ProductosFragment extends Fragment {
             String JsonStr = null;
 
             try {
-                final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes";
+                final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes/";
+                final String SAPO_APPEND_URL1 = "productos";
+                final String SAPO_APPEND_URL2 = "categoria";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-                final String ALMACENID_VALUE = integers[0].toString();
+                //final String ALMACENID_VALUE = integers[0].toString();
+                final String ALMACENID_VALUE = "16";
+                //final String CATEGORIAID_VALUE = integers[1].toString();
+                final String CATEGORIAID_VALUE = "5";
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                         .appendPath(ALMACENID_VALUE)
+                        .appendPath(SAPO_APPEND_URL1).appendPath(SAPO_APPEND_URL2)
+                        .appendPath(CATEGORIAID_VALUE)
                         .build();
 
                 URL url = new URL(builtUri.toString());
@@ -163,7 +166,7 @@ public class ProductosFragment extends Fragment {
 
             try {
                 //Parsea el JSON.
-                return getAlmacenes(JsonStr);
+                return getProductos(JsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
@@ -175,8 +178,8 @@ public class ProductosFragment extends Fragment {
         protected void onPostExecute(String[] result) {
             if (result != null) {
                 productosAdapter.clear();
-                for(String dayForecastStr : result) {
-                    productosAdapter.add(dayForecastStr);
+                for(String r : result) {
+                    productosAdapter.add(r);
                 }
             }
         }
