@@ -65,7 +65,8 @@ public class TiendasFragment extends Fragment {
                         R.layout.list_item_tiendas, // The name of the layout ID.
                         (ArrayList<DataTienda>) list);
 
-        FetchTiendasTask tiendasTask = new FetchTiendasTask();
+        Context context = getActivity();
+        FetchTiendasTask tiendasTask = new FetchTiendasTask(context, tiendasAdapter);
         tiendasTask.execute();
 
         View rootView = inflater.inflate(R.layout.fragment_tiendas, container, false);
@@ -76,7 +77,7 @@ public class TiendasFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Context context = getActivity();
+
                 Intent intent = new Intent(getActivity(), CategoriasActivity.class)
                         .putExtra("almacenID", tiendasAdapter.getItem(i).getId())
                         .putExtra("almacenNombre", tiendasAdapter.getItem(i).getNombre());
@@ -88,104 +89,5 @@ public class TiendasFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
 
-        private final String LOG_TAG = FetchTiendasTask.class.getSimpleName();
-
-        private DataTienda[] getAlmacenes(String JsonStr) throws JSONException {
-            Log.v(LOG_TAG, "getAlmacenes");
-            JSONArray aJson = new JSONArray(JsonStr);
-            DataTienda[] resultStrs = new DataTienda[aJson.length()];
-            for(int i = 0; i < aJson.length(); i++) {
-                JSONObject oJson = aJson.getJSONObject(i);
-                resultStrs[i] = new DataTienda();
-                resultStrs[i].setNombre(oJson.getString("nombre"));
-                resultStrs[i].setId((int) oJson.getInt("id"));
-            }
-            return  resultStrs;
-        }
-
-        @Override
-        protected DataTienda[] doInBackground(Void... voids) {
-
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            String JsonStr = null;
-
-            try {
-                final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes";
-                final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
-                final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-
-                Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
-                        .build();
-
-                URL url = new URL(builtUri.toString());
-
-                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
-
-                // Crea la conexión a Azure con la OCP_APIM_SUBSCRIPTION_KEY.
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setRequestProperty(OCP_APIM_SUBSCRIPTION_KEY, OCP_APIM_SUBSCRIPTION_VALUE);
-                urlConnection.connect();
-
-                // Lee el input stream
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-                if (inputStream == null) {
-                    return null;
-                }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
-                }
-
-                if (buffer.length() == 0) {
-                    // Si no leyó nada, termina.
-                    return null;
-                }
-
-                JsonStr = buffer.toString();
-                Log.v(LOG_TAG, "JSON: " + JsonStr);
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error ", e);
-                return null;
-            } finally {
-                if (urlConnection != null) {
-                    //Cierra la conexión
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
-                    }
-                }
-            }
-
-            try {
-                //Parsea el JSON.
-                return getAlmacenes(JsonStr);
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, e.getMessage(), e);
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(DataTienda[] result) {
-            if (result != null) {
-                tiendasAdapter.clear();
-                for(DataTienda r : result) {
-                    tiendasAdapter.add(r);
-                }
-            }
-        }
-    }
 }

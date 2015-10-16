@@ -46,6 +46,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.sapo.app.ProductosActivity" />
         </activity>
+        <provider
+            android:authorities="com.example.android.sapo.app"
+            android:name=".data.SAPoProvider" />
     </application>
 
 </manifest>
