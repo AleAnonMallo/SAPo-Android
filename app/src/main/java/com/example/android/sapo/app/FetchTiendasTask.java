@@ -1,11 +1,15 @@
 package com.example.android.sapo.app;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.android.sapo.app.adapters.TiendaAdapter;
+import com.example.android.sapo.app.data.SAPoContract;
 import com.example.android.sapo.app.datatypes.DataTienda;
 
 import org.json.JSONArray;
@@ -18,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Vector;
 
 /**
  * Created by Alejandro on 15-Oct-15.
@@ -38,11 +43,14 @@ public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
         Log.v(LOG_TAG, "getAlmacenes");
         JSONArray aJson = new JSONArray(JsonStr);
         DataTienda[] resultStrs = new DataTienda[aJson.length()];
+        Vector<ContentValues> cVVector = new Vector<ContentValues>(resultStrs.length);
         for(int i = 0; i < aJson.length(); i++) {
             JSONObject oJson = aJson.getJSONObject(i);
             resultStrs[i] = new DataTienda();
             resultStrs[i].setNombre(oJson.getString("nombre"));
             resultStrs[i].setId((int) oJson.getInt("id"));
+
+            addAlmacen(oJson.getString("id"), resultStrs[i].getNombre(), oJson.getString("descripcion"), oJson.getString("url"));
         }
         return  resultStrs;
     }
@@ -128,5 +136,46 @@ public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
                 mTiendasAdapter.add(r);
             }
         }
+    }
+
+    long addAlmacen(String idAlmacen, String nomAlmacen, String descAlmacen, String urlAlmacen) {
+        long locationId;
+
+        // First, check if the almacen with this idAlmacen exists in the db
+        Cursor almacenCursor = mContext.getContentResolver().query(
+                SAPoContract.AlmacenEntry.CONTENT_URI,
+                new String[]{SAPoContract.AlmacenEntry._ID},
+                SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID + " = ?",
+                new String[]{idAlmacen},
+                null);
+
+        if (almacenCursor.moveToFirst()) {
+            int locationIdIndex = almacenCursor.getColumnIndex(SAPoContract.AlmacenEntry._ID);
+            locationId = almacenCursor.getLong(locationIdIndex);
+        } else {
+            // Now that the content provider is set up, inserting rows of data is pretty simple.
+            // First create a ContentValues object to hold the data you want to insert.
+            ContentValues locationValues = new ContentValues();
+
+            // Then add the data, along with the corresponding name of the data type,
+            // so the content provider knows what kind of value is being inserted.
+            locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID, idAlmacen);
+            locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_NOMBRE, nomAlmacen);
+            locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION, descAlmacen);
+            locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_URL, urlAlmacen);
+
+            // Finally, insert location data into the database.
+            Uri insertedUri = mContext.getContentResolver().insert(
+                    SAPoContract.AlmacenEntry.CONTENT_URI,
+                    locationValues
+            );
+
+            // The resulting URI contains the ID for the row.  Extract the locationId from the Uri.
+            locationId = ContentUris.parseId(insertedUri);
+        }
+
+        almacenCursor.close();
+        // Wait, that worked?  Yes!
+        return locationId;
     }
 }

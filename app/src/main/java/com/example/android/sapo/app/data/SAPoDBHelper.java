@@ -33,16 +33,16 @@ public class SAPoDBHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_CATEGORIA_TABLE = "CREATE TABLE " + SAPoContract.CategoriaEntry.TABLE_NAME + " (" +
                 SAPoContract.CategoriaEntry.COLUMN_CATEGORIA_ID+ " INTEGER PRIMARY KEY," +
-                SAPoContract.CategoriaEntry.COLUMN_CATEGORIA_NOMBRE + " TEXT NOT NULL, " +
+                SAPoContract.CategoriaEntry.COLUMN_CATEGORIA_NOMBRE + " TEXT NOT NULL " +
 
                 // Set up the location column as a foreign key to location table.
-                "FOREIGN KEY (" + SAPoContract.CategoriaEntry.COLUMN_ALMACEN_FOREIGN_KEY + ") REFERENCES " +
-                SAPoContract.AlmacenEntry.TABLE_NAME + " (" + SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID + ") " +
+               // "FOREIGN KEY (" + SAPoContract.CategoriaEntry.COLUMN_ALMACEN_FOREIGN_KEY + ") REFERENCES " +
+                //SAPoContract.AlmacenEntry.TABLE_NAME + "(" + SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID + ") " +
 
                 " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_ALMACEN_TABLE);
-        //sqLiteDatabase.execSQL(SQL_CREATE_CATEGORIA_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_CATEGORIA_TABLE);
 
     }
 

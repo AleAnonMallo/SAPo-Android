@@ -3,7 +3,6 @@
     package="com.example.android.sapo.app"
     android:installLocation="preferExternal" >
 
-    <!-- This permission is necessary in order for Sunshine to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -12,13 +11,25 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
         <activity
-            android:name=".TiendasActivity"
-            android:label="@string/app_name" >
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:id="@+id/title_activity_detail"
+            android:name=".TiendasActivity"
+            android:label="@string/app_name">
+            android:parentActivityName=".LoginActivity" >
+<!--            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LoginActivity" /> -->
         </activity>
         <activity
             android:id="@+id/title_activity_detail"
@@ -46,9 +57,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.sapo.app.ProductosActivity" />
         </activity>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+
         <provider
-            android:authorities="com.example.android.sapo.app"
-            android:name=".data.SAPoProvider" />
+            android:name=".data.SAPoProvider"
+            android:authorities="com.example.android.sapo.app" />
+
+
     </application>
 
 </manifest>

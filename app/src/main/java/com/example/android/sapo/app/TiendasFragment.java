@@ -2,9 +2,11 @@ package com.example.android.sapo.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,9 +67,7 @@ public class TiendasFragment extends Fragment {
                         R.layout.list_item_tiendas, // The name of the layout ID.
                         (ArrayList<DataTienda>) list);
 
-        Context context = getActivity();
-        FetchTiendasTask tiendasTask = new FetchTiendasTask(context, tiendasAdapter);
-        tiendasTask.execute();
+        updateAlmacenes();
 
         View rootView = inflater.inflate(R.layout.fragment_tiendas, container, false);
         // Get a reference to the ListView, and attach this adapter to it.
@@ -89,5 +89,17 @@ public class TiendasFragment extends Fragment {
         return rootView;
     }
 
+
+    private void updateAlmacenes() {
+        FetchTiendasTask tiendasTask = new FetchTiendasTask(getActivity(), tiendasAdapter);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        tiendasTask.execute();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateAlmacenes();
+    }
 
 }

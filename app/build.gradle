@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.android.sapo.app"
-        minSdkVersion 10
+        minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -19,8 +19,13 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.2'
+    compile 'com.facebook.android:facebook-android-sdk:4.7.0'
 
 }
