@@ -34,11 +34,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TiendasFragment extends Fragment {
+public class AlmacenFragment extends Fragment {
 
     private TiendaAdapter tiendasAdapter;
 
-    public TiendasFragment() {
+    public AlmacenFragment() {
     }
 
     @Override

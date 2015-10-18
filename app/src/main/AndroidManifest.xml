@@ -16,17 +16,18 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
 
         <activity
             android:id="@+id/title_activity_detail"
-            android:name=".TiendasActivity"
+            android:name=".AlmacenActivity"
             android:label="@string/app_name">
-            android:parentActivityName=".LoginActivity" >
+            <!--android:parentActivityName=".LoginActivity"  -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 <!--            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LoginActivity" /> -->
@@ -35,10 +36,10 @@
             android:id="@+id/title_activity_detail"
             android:name=".CategoriasActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".TiendasActivity" >
+            android:parentActivityName=".AlmacenActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".TiendasActivity" />
+                android:value=".AlmacenActivity" />
         </activity>
         <activity
             android:id="@+id/title_activity_productos"

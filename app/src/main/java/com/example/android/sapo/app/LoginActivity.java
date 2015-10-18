@@ -1,37 +1,14 @@
 package com.example.android.sapo.app;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -44,9 +21,7 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -67,58 +42,108 @@ public class LoginActivity extends ActionBarActivity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
-
         setContentView(R.layout.activity_login);
         info = (TextView)findViewById(R.id.info);
-        loginButton = (LoginButton)findViewById(R.id.login_button);
+        if (AccessToken.getCurrentAccessToken() == null){
 
-        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
+            loginButton = (LoginButton)findViewById(R.id.login_button);
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
+            loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
 
-                GraphRequest request = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(
-                                    JSONObject object,
-                                    GraphResponse response) {
-                                loginInfo = response.toString();
-                                Log.v("¡FB!", object.toString());
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
-                                Intent intent = new Intent(loginActivity, TiendasActivity.class);
-                                try {
-                                    intent.putExtra("email", object.getString("email"));
-                                    intent.putExtra("name", object.getString("name"));
-                                    intent.putExtra("id", object.getString("id"));
-                                } catch (JSONException ex) {
-                                    //
-                                } finally {
-                                    startActivity(intent);
+                @Override
+                public void onCancel() {
+                    info.setText("Login attempt cancelled.");
+                }
+
+                @Override
+                public void onError(FacebookException e) {
+                    info.setText("Login attempt failed.");
+                }
+
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+
+                    GraphRequest request = GraphRequest.newMeRequest(
+                            loginResult.getAccessToken(),
+                            new GraphRequest.GraphJSONObjectCallback() {
+                                @Override
+                                public void onCompleted(
+                                        JSONObject object,
+                                        GraphResponse response) {
+                                    loginInfo = response.toString();
+                                    Log.v("¡FB!", object.toString());
+
+                                    PostUsuario postUsuario = new PostUsuario();
+                                    String[] parametros = new String[4];
+                                    try {
+                                        parametros[0] = object.getString("email");
+                                        parametros[1] = object.getString("last_name");
+                                        parametros[2] = object.getString("first_name");
+                                        parametros[3] = object.getString("id");
+                                    } catch (JSONException ex) {
+
+                                    } finally {
+                                        postUsuario.execute(parametros);
+                                        Intent intent = new Intent(loginActivity, AlmacenActivity.class);
+                                        intent.putExtra("email", parametros[0]);
+                                        intent.putExtra("first_name", parametros[1]);
+                                        intent.putExtra("last_name", parametros[2]);
+                                        intent.putExtra("token", AccessToken.getCurrentAccessToken().getToken());
+                                        startActivity(intent);
+                                    }
                                 }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id, first_name, last_name, email");
+                    request.setParameters(parameters);
+                    request.executeAndWait();
+                }
+            });
+        } else {
+            Log.v("¡FB!", "ELSE!");
+            GraphRequest request = GraphRequest.newMeRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+                            loginInfo = response.toString();
+                            Log.v("¡FB!", object.toString());
+
+                            PostUsuario postUsuario = new PostUsuario();
+                            String[] parametros = new String[4];
+                            try {
+                                parametros[0] = object.getString("email");
+                                parametros[1] = object.getString("last_name");
+                                parametros[2] = object.getString("first_name");
+                                parametros[3] = object.getString("id");
+                            } catch (JSONException ex) {
+
+                            } finally {
+                                postUsuario.execute(parametros);
+                                Intent intent = new Intent(loginActivity, AlmacenActivity.class);
+                                intent.putExtra("email", parametros[0]);
+                                intent.putExtra("first_name", parametros[1]);
+                                intent.putExtra("last_name", parametros[2]);
+                                intent.putExtra("token", AccessToken.getCurrentAccessToken().getToken());
+                                startActivity(intent);
                             }
-                        });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,gender, birthday");
-                request.setParameters(parameters);
-                request.executeAsync();
+                        }
+                    });
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id, first_name, last_name, email");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }
 
-
-            }
-
-            @Override
-            public void onCancel() {
-                info.setText("Login attempt cancelled.");
-            }
-
-            @Override
-            public void onError(FacebookException e) {
-                info.setText("Login attempt failed.");
-            }
-        });
     }
+
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

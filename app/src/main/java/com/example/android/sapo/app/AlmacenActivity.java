@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
-public class TiendasActivity extends ActionBarActivity {
+public class AlmacenActivity extends ActionBarActivity {
 
 
     @Override
@@ -19,7 +19,7 @@ public class TiendasActivity extends ActionBarActivity {
         }
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container_tiendas, new TiendasFragment())
+                    .add(R.id.container_tiendas, new AlmacenFragment())
                     .commit();
         }
     }
