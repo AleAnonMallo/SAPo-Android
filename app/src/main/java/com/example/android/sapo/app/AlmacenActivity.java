@@ -45,11 +45,11 @@ public class AlmacenActivity extends ActionBarActivity {
 
         if (AccessToken.getCurrentAccessToken() == null){
             setContentView(R.layout.activity_login);
-
+            Log.v("¡FB!", "IF!");
             loginButton = (LoginButton)findViewById(R.id.login_button);
-
+            Log.v("¡FB!", "IF2!");
             loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
-
+            Log.v("¡FB!", "IF3!");
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
                 @Override
@@ -59,12 +59,13 @@ public class AlmacenActivity extends ActionBarActivity {
 
                 @Override
                 public void onError(FacebookException e) {
+                    Log.v("¡FB!", "error: " + e);
                     info.setText("Login attempt failed.");
                 }
 
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-
+                    Log.v("¡FB!", "SUCCESS!!!!");
                     GraphRequest request = GraphRequest.newMeRequest(
                             loginResult.getAccessToken(),
                             new GraphRequest.GraphJSONObjectCallback() {
@@ -74,7 +75,6 @@ public class AlmacenActivity extends ActionBarActivity {
                                         GraphResponse response) {
 
                                     Log.v("¡FB!", object.toString());
-
                                     PostUsuario postUsuario = new PostUsuario();
                                     String[] parametros = new String[4];
                                     try {
@@ -87,28 +87,25 @@ public class AlmacenActivity extends ActionBarActivity {
 
                                     } finally {
                                         postUsuario.execute(parametros);
-                                        /*Intent intent = new Intent(loginActivity, AlmacenActivity.class);
-                                        intent.putExtra("email", parametros[0]);
-                                        intent.putExtra("first_name", parametros[1]);
-                                        intent.putExtra("last_name", parametros[2]);
-                                        intent.putExtra("token", AccessToken.getCurrentAccessToken().getToken());
-                                        startActivity(intent);*/
+
                                         setContentView(R.layout.activity_tiendas);
-                                        setTitle(parametros[1]);
-                                        if (savedInstanceState2 == null) {
+                                        setTitle("Almacenes de " + parametros[2]);
+                                        //if (savedInstanceState2 == null) {
                                             getSupportFragmentManager().beginTransaction()
                                                     .add(R.id.container_tiendas, new AlmacenFragment())
                                                     .commit();
-                                        }
+                                        //}
                                     }
                                 }
                             });
                     Bundle parameters = new Bundle();
                     parameters.putString("fields", "id, first_name, last_name, email");
                     request.setParameters(parameters);
+                    Log.v("¡FB!", "SET PARAMETERS");
                     request.executeAsync();
                 }
             });
+            Log.v("¡FB!", "IF4!");
         } else {
             Log.v("¡FB!", "ELSE2!");
             GraphRequest request = GraphRequest.newMeRequest(
@@ -140,11 +137,11 @@ public class AlmacenActivity extends ActionBarActivity {
                                 startActivity(intent);*/
                                 setContentView(R.layout.activity_tiendas);
                                 setTitle("Almacenes de " + parametros[2]);
-                                if (savedInstanceState2 == null) {
+                                //if (savedInstanceState2 == null) {
                                     getSupportFragmentManager().beginTransaction()
                                             .add(R.id.container_tiendas, new AlmacenFragment())
                                             .commit();
-                                }
+                                //}
                             }
                         }
                     });
@@ -153,5 +150,10 @@ public class AlmacenActivity extends ActionBarActivity {
             request.setParameters(parameters);
             request.executeAsync();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
