@@ -64,12 +64,7 @@ public class AlmacenActivity extends ActionBarActivity {
 
                 @Override
                 public void onError(FacebookException e) {
-<<<<<<< HEAD
-                    Log.v("¡FB!", "error: " + e);
-                    info.setText("Login attempt failed.");
-=======
                     Log.e("AlmacenActivity", e.toString());
->>>>>>> 4bc6f9cb2961b73d0e5992e3c5fff09eadf33503
                 }
 
                 @Override
@@ -95,20 +90,13 @@ public class AlmacenActivity extends ActionBarActivity {
 
                                     } finally {
                                         postUsuario.execute(parametros);
-<<<<<<< HEAD
-
-                                        setContentView(R.layout.activity_tiendas);
-                                        setTitle("Almacenes de " + parametros[2]);
-                                        //if (savedInstanceState2 == null) {
-=======
                                         setContentView(R.layout.activity_tiendas);
                                         setTitle("Almacenes de " + parametros[2]);
                                         if (savedInstanceState2 == null) {
->>>>>>> 4bc6f9cb2961b73d0e5992e3c5fff09eadf33503
                                             getSupportFragmentManager().beginTransaction()
                                                     .add(R.id.container_tiendas, new AlmacenFragment())
                                                     .commit();
-                                        //}
+                                        }
                                     }
                                 }
                             });
@@ -144,11 +132,11 @@ public class AlmacenActivity extends ActionBarActivity {
                                 postUsuario.execute(parametros);
                                 setContentView(R.layout.activity_tiendas);
                                 setTitle("Almacenes de " + parametros[2]);
-                                //if (savedInstanceState2 == null) {
+                                if (savedInstanceState2 == null) {
                                     getSupportFragmentManager().beginTransaction()
                                             .add(R.id.container_tiendas, new AlmacenFragment())
                                             .commit();
-                                //}
+                                }
                             }
                         }
                     });
