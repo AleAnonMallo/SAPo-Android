@@ -125,8 +125,6 @@ public class ProductosFragment extends Fragment {
                 final String ALMACENID_VALUE = integers[0].toString();
                 final String CATEGORIAID_VALUE = integers[1].toString();
 
-
-
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                         .appendPath(ALMACENID_VALUE)
                         .appendEncodedPath(SAPO_APPEND_URL)

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.test.AndroidTestCase;
 
 import com.example.android.sapo.app.data.SAPoContract;
+import com.example.android.sapo.app.webservices.FetchAlmacenTask;
 
 /**
  * Created by Alejandro on 15-Oct-15.
@@ -22,7 +23,7 @@ public class TestFetchTiendasTask extends AndroidTestCase {
                 SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID + " = ?",
                 new String[]{ADD_ALMACEN_ID});
 
-        FetchTiendasTask fwt = new FetchTiendasTask(getContext(), null);
+        FetchAlmacenTask fwt = new FetchAlmacenTask(getContext(), null);
         long locationId = fwt.addAlmacen(ADD_ALMACEN_ID, ADD_ALMACEN_NOMBRE,
                 ADD_ALMACEN_DESCRIPCION, ADD_ALMACEN_URL);
 

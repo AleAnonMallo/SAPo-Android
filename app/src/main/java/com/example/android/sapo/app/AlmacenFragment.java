@@ -1,14 +1,10 @@
 package com.example.android.sapo.app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,25 +14,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.android.sapo.app.adapters.TiendaAdapter;
+import com.example.android.sapo.app.adapters.AlmacenAdapter;
 import com.example.android.sapo.app.datatypes.DataTienda;
+import com.example.android.sapo.app.webservices.FetchAlmacenTask;
+import com.facebook.login.LoginManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AlmacenFragment extends Fragment {
 
-    private TiendaAdapter tiendasAdapter;
+    private AlmacenAdapter tiendasAdapter;
 
     public AlmacenFragment() {
     }
@@ -49,10 +37,23 @@ public class AlmacenFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.logout, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            LoginManager.getInstance().logOut();
+            AlmacenActivity almacenActivity = (AlmacenActivity) getActivity();
+            almacenActivity.inflateLogin();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -62,7 +63,7 @@ public class AlmacenFragment extends Fragment {
         List<DataTienda> list = new ArrayList<DataTienda>();
 
         tiendasAdapter =
-                new TiendaAdapter(
+                new AlmacenAdapter(
                         getActivity(), // The current context (this activity)
                         R.layout.list_item_tiendas, // The name of the layout ID.
                         (ArrayList<DataTienda>) list);
@@ -91,7 +92,7 @@ public class AlmacenFragment extends Fragment {
 
 
     private void updateAlmacenes() {
-        FetchTiendasTask tiendasTask = new FetchTiendasTask(getActivity(), tiendasAdapter);
+        FetchAlmacenTask tiendasTask = new FetchAlmacenTask(getActivity(), tiendasAdapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         AlmacenActivity almacenActivity = (AlmacenActivity) getActivity();
         tiendasTask.execute(almacenActivity.getIdUsuario());
