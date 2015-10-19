@@ -1,4 +1,4 @@
-package com.example.android.sapo.app;
+package com.example.android.sapo.app.webservices;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.android.sapo.app.adapters.TiendaAdapter;
+import com.example.android.sapo.app.adapters.AlmacenAdapter;
 import com.example.android.sapo.app.data.SAPoContract;
 import com.example.android.sapo.app.datatypes.DataTienda;
 
@@ -27,15 +27,15 @@ import java.util.Vector;
 /**
  * Created by Alejandro on 15-Oct-15.
  */
-public class FetchTiendasTask extends AsyncTask<String, Void, DataTienda[]> {
+public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
 
-    private final String LOG_TAG = FetchTiendasTask.class.getSimpleName();
-    private TiendaAdapter mTiendasAdapter;
+    private final String LOG_TAG = FetchAlmacenTask.class.getSimpleName();
+    private AlmacenAdapter mTiendasAdapter;
     private final Context mContext;
 
-    public FetchTiendasTask(Context context, TiendaAdapter tiendaAdapter) {
+    public FetchAlmacenTask(Context context, AlmacenAdapter almacenAdapter) {
         mContext = context;
-        mTiendasAdapter = tiendaAdapter;
+        mTiendasAdapter = almacenAdapter;
 
     }
 
