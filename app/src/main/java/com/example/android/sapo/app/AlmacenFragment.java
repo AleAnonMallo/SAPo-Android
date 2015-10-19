@@ -93,7 +93,8 @@ public class AlmacenFragment extends Fragment {
     private void updateAlmacenes() {
         FetchTiendasTask tiendasTask = new FetchTiendasTask(getActivity(), tiendasAdapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        tiendasTask.execute();
+        AlmacenActivity almacenActivity = (AlmacenActivity) getActivity();
+        tiendasTask.execute(almacenActivity.getIdUsuario());
     }
 
     @Override

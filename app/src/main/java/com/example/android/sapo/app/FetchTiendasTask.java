@@ -27,7 +27,7 @@ import java.util.Vector;
 /**
  * Created by Alejandro on 15-Oct-15.
  */
-public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
+public class FetchTiendasTask extends AsyncTask<String, Void, DataTienda[]> {
 
     private final String LOG_TAG = FetchTiendasTask.class.getSimpleName();
     private TiendaAdapter mTiendasAdapter;
@@ -56,7 +56,7 @@ public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
     }
 
     @Override
-    protected DataTienda[] doInBackground(Void... voids) {
+    protected DataTienda[] doInBackground(String... strings) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -64,11 +64,16 @@ public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
         String JsonStr = null;
 
         try {
-            final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes";
+            final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/usuarios/";
+            final String SAPO_APPEND_URL = "almacenes/list";
             final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
             final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
+            //final String USUARIO_ID = strings[0];
+            final String USUARIO_ID = "alejandroanonmallo@gmail.com";
 
             Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
+                    .appendPath(USUARIO_ID)
+                    .appendEncodedPath(SAPO_APPEND_URL)
                     .build();
 
             URL url = new URL(builtUri.toString());
@@ -173,9 +178,7 @@ public class FetchTiendasTask extends AsyncTask<Void, Void, DataTienda[]> {
             // The resulting URI contains the ID for the row.  Extract the locationId from the Uri.
             locationId = ContentUris.parseId(insertedUri);
         }
-
         almacenCursor.close();
-        // Wait, that worked?  Yes!
         return locationId;
     }
 }
