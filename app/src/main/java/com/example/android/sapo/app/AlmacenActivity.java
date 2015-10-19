@@ -34,6 +34,11 @@ public class AlmacenActivity extends ActionBarActivity {
         return idUsuario;
     }
 
+    public void inflateLogin() {
+        setTitle("SAPo Login");
+        setContentView(R.layout.activity_login);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +59,12 @@ public class AlmacenActivity extends ActionBarActivity {
 
                 @Override
                 public void onCancel() {
-                    info.setText("Login attempt cancelled.");
+
                 }
 
                 @Override
                 public void onError(FacebookException e) {
-                    info.setText("Login attempt failed.");
+                    Log.e("AlmacenActivity", e.toString());
                 }
 
                 @Override
@@ -72,7 +77,6 @@ public class AlmacenActivity extends ActionBarActivity {
                                 public void onCompleted(
                                         JSONObject object,
                                         GraphResponse response) {
-
                                     Log.v("¡FB!", object.toString());
 
                                     PostUsuario postUsuario = new PostUsuario();
@@ -87,14 +91,8 @@ public class AlmacenActivity extends ActionBarActivity {
 
                                     } finally {
                                         postUsuario.execute(parametros);
-                                        /*Intent intent = new Intent(loginActivity, AlmacenActivity.class);
-                                        intent.putExtra("email", parametros[0]);
-                                        intent.putExtra("first_name", parametros[1]);
-                                        intent.putExtra("last_name", parametros[2]);
-                                        intent.putExtra("token", AccessToken.getCurrentAccessToken().getToken());
-                                        startActivity(intent);*/
                                         setContentView(R.layout.activity_tiendas);
-                                        setTitle(parametros[1]);
+                                        setTitle("Almacenes de " + parametros[2]);
                                         if (savedInstanceState2 == null) {
                                             getSupportFragmentManager().beginTransaction()
                                                     .add(R.id.container_tiendas, new AlmacenFragment())
@@ -110,7 +108,6 @@ public class AlmacenActivity extends ActionBarActivity {
                 }
             });
         } else {
-            Log.v("¡FB!", "ELSE2!");
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -132,12 +129,6 @@ public class AlmacenActivity extends ActionBarActivity {
 
                             } finally {
                                 postUsuario.execute(parametros);
-                                /*Intent intent = new Intent(loginActivity, AlmacenActivity.class);
-                                intent.putExtra("email", parametros[0]);
-                                intent.putExtra("first_name", parametros[1]);
-                                intent.putExtra("last_name", parametros[2]);
-                                intent.putExtra("token", AccessToken.getCurrentAccessToken().getToken());
-                                startActivity(intent);*/
                                 setContentView(R.layout.activity_tiendas);
                                 setTitle("Almacenes de " + parametros[2]);
                                 if (savedInstanceState2 == null) {
@@ -153,5 +144,10 @@ public class AlmacenActivity extends ActionBarActivity {
             request.setParameters(parameters);
             request.executeAsync();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
