@@ -1,4 +1,4 @@
-package com.example.android.sapo.app;
+package com.example.android.sapo.app.webservices;
 
 import android.net.Uri;
 import android.os.AsyncTask;

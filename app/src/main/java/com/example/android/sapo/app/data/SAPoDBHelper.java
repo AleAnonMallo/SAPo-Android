@@ -27,8 +27,7 @@ public class SAPoDBHelper extends SQLiteOpenHelper {
                 SAPoContract.AlmacenEntry._ID + " INTEGER PRIMARY KEY," +
                 SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID + " TEXT NOT NULL," +
                 SAPoContract.AlmacenEntry.COLUMN_ALMACEN_NOMBRE + " TEXT NOT NULL, " +
-                SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION + " TEXT NOT NULL, " +
-                SAPoContract.AlmacenEntry.COLUMN_ALMACEN_URL + " TEXT NOT NULL " +
+                SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION + " TEXT NOT NULL " +
                 " );";
 
         final String SQL_CREATE_CATEGORIA_TABLE = "CREATE TABLE " + SAPoContract.CategoriaEntry.TABLE_NAME + " (" +

@@ -25,7 +25,7 @@ public class TestFetchTiendasTask extends AndroidTestCase {
 
         FetchAlmacenTask fwt = new FetchAlmacenTask(getContext(), null);
         long locationId = fwt.addAlmacen(ADD_ALMACEN_ID, ADD_ALMACEN_NOMBRE,
-                ADD_ALMACEN_DESCRIPCION, ADD_ALMACEN_URL);
+                ADD_ALMACEN_DESCRIPCION);
 
         // does addLocation return a valid record ID?
         assertFalse("Error: addLocation returned an invalid ID on insert",
@@ -41,8 +41,7 @@ public class TestFetchTiendasTask extends AndroidTestCase {
                             SAPoContract.AlmacenEntry._ID,
                             SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID,
                             SAPoContract.AlmacenEntry.COLUMN_ALMACEN_NOMBRE,
-                            SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION,
-                            SAPoContract.AlmacenEntry.COLUMN_ALMACEN_URL
+                            SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION
                     },
                     SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID + " = ?",
                     new String[]{ADD_ALMACEN_ID},
@@ -70,7 +69,7 @@ public class TestFetchTiendasTask extends AndroidTestCase {
 
             // add the location again
             long newLocationId = fwt.addAlmacen(ADD_ALMACEN_ID, ADD_ALMACEN_NOMBRE,
-                    ADD_ALMACEN_DESCRIPCION, ADD_ALMACEN_URL);
+                    ADD_ALMACEN_DESCRIPCION);
 
             assertEquals("Error: inserting a location again should return the same ID",
                     locationId, newLocationId);

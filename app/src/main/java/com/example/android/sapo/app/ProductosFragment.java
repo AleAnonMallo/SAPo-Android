@@ -9,14 +9,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.android.sapo.app.adapters.ProductoAdapter;
 import com.example.android.sapo.app.datatypes.DataProducto;
+import com.facebook.login.LoginManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +40,6 @@ import java.util.List;
 public class ProductosFragment extends Fragment {
 
     private final String LOG_TAG = ProductosFragment.class.getSimpleName();
-    //private ArrayAdapter<String> productosAdapter;
     private ProductoAdapter productosAdapter;
     private Integer almacenID;
 
@@ -59,7 +61,7 @@ public class ProductosFragment extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_productos);
         listView.setAdapter(productosAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -67,6 +69,16 @@ public class ProductosFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), DetalleProductoActivity.class)
                         .putExtra("productoID", productosAdapter.getItem(i).getIdProducto());
+                startActivity(intent);
+            }
+        });
+
+        Button button = (Button) rootView.findViewById(R.id.producto_agregar_producto);
+        button.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AgregarProductoActivity.class)
+                        .putExtra("almacenID", almacenID);
+
                 startActivity(intent);
             }
         });
@@ -100,7 +112,8 @@ public class ProductosFragment extends Fragment {
             JSONArray jsonArray = new JSONArray(JsonStr);
             DataProducto[] resultStrs = new DataProducto[jsonArray.length()];
             for(int i = 0; i < jsonArray.length(); i++) {
-                JSONObject producto = jsonArray.getJSONObject(i);
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONObject producto = jsonObject.getJSONObject("producto");
                 resultStrs[i] = new DataProducto();
                 resultStrs[i].setNombre(producto.getString("nombre"));
                 resultStrs[i].setIdProducto(producto.getInt("id"));

@@ -12,5 +12,15 @@
 
     <string name="action_logout">Logout</string>
 
+<!-- Vista de productos -->
+    <string name="producto_agregar_producto">Agregar nuevo producto.</string>
+
+<!-- Vista de agregar producto -->
+    <string name="agregar_producto_title">Complete el formulario para ingresar un nuevo producto.</string>
+    <string name="agregar_producto_nombre">Nombre del producto.</string>
+    <string name="agregar_producto_descripcion">Descripción del producto.</string>
+    <string name="agregar_producto_stock">Stock del producto.</string>
+    <string name="agregar_producto_enviar">Enviar</string>
+
 
 </resources>
