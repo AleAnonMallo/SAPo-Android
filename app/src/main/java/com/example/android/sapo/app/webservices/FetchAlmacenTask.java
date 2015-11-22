@@ -48,9 +48,9 @@ public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
             JSONObject oJson = aJson.getJSONObject(i);
             resultStrs[i] = new DataTienda();
             resultStrs[i].setNombre(oJson.getString("nombre"));
-            resultStrs[i].setId((int) oJson.getInt("id"));
+            resultStrs[i].setId(oJson.getString("id"));
 
-            addAlmacen(oJson.getString("id"), resultStrs[i].getNombre(), oJson.getString("descripcion"));
+//          addAlmacen(oJson.getString("id"), resultStrs[i].getNombre(), oJson.getString("descripcion"));
         }
         return  resultStrs;
     }
@@ -68,8 +68,7 @@ public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
             final String SAPO_APPEND_URL = "almacenes/list";
             final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
             final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-            //final String USUARIO_ID = strings[0];
-            final String USUARIO_ID = "gmunua";
+            final String USUARIO_ID = strings[0];
 
             Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                     .appendPath(USUARIO_ID)

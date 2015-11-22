@@ -4,17 +4,17 @@ package com.example.android.sapo.app.datatypes;
  * Created by Alejandro on 13-Oct-15.
  */
 public class DataTienda {
-    private int id;
+    private String id;
     private String nombre;
 
     public DataTienda() {
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

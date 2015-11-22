@@ -48,7 +48,14 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
             // do whatever you want with your string and long
             //viewHolder.itemView.setText(String.format("%d %s", item.getId(), item.getNombre()));
             viewHolder.listProductoNombre.setText(item.getNombre());
-            viewHolder.listProductoDescripcion.setText(item.getDescripcion().substring(0,7) + "...");
+
+            String descItem = item.getDescripcion();
+            int fin = 7;
+            if (descItem.length() < 7)
+                fin = descItem.length();
+            String desc= item.getDescripcion().substring(0,fin) + "...";
+
+            viewHolder.listProductoDescripcion.setText(desc);
         }
 
         return convertView;

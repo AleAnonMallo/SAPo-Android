@@ -41,7 +41,8 @@ public class ProductosFragment extends Fragment {
 
     private final String LOG_TAG = ProductosFragment.class.getSimpleName();
     private ProductoAdapter productosAdapter;
-    private Integer almacenID;
+    private String almacenID;
+    private Integer categoriaID;
 
     public ProductosFragment(){
     }
@@ -77,23 +78,24 @@ public class ProductosFragment extends Fragment {
         button.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AgregarProductoActivity.class)
-                        .putExtra("almacenID", almacenID);
+                        .putExtra("almacenID", almacenID)
+                        .putExtra("categoriaID", categoriaID.toString());
 
                 startActivity(intent);
             }
         });
 
         Intent intent = getActivity().getIntent();
-        Integer categoriaID = 0;
+
         String categoriaNombre = "";
         if (intent != null && intent.hasExtra("categoriaID")) {
             categoriaID = intent.getIntExtra("categoriaID",0);
-            almacenID = intent.getIntExtra("almacenID", 0);
+            almacenID = intent.getStringExtra("almacenID");
             categoriaNombre = intent.getStringExtra("categoriaNombre");
         }
-        Integer[] param = new Integer[2];
+        String[] param = new String[2];
         param[0] = almacenID;
-        param[1] = categoriaID;
+        param[1] = categoriaID.toString();
 
         Activity activity = getActivity();
         activity.setTitle(categoriaNombre);
@@ -104,7 +106,7 @@ public class ProductosFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchProductosTask extends AsyncTask<Integer, Void, DataProducto[]> {
+    public class FetchProductosTask extends AsyncTask<String, Void, DataProducto[]> {
 
         private final String LOG_TAG = FetchProductosTask.class.getSimpleName();
 
@@ -123,7 +125,7 @@ public class ProductosFragment extends Fragment {
         }
 
         @Override
-        protected DataProducto[] doInBackground(Integer... integers) {
+        protected DataProducto[] doInBackground(String... strings) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -135,8 +137,8 @@ public class ProductosFragment extends Fragment {
                 final String SAPO_APPEND_URL = "productos/categoria";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-                final String ALMACENID_VALUE = integers[0].toString();
-                final String CATEGORIAID_VALUE = integers[1].toString();
+                final String ALMACENID_VALUE = strings[0].toString();
+                final String CATEGORIAID_VALUE = strings[1].toString();
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                         .appendPath(ALMACENID_VALUE)

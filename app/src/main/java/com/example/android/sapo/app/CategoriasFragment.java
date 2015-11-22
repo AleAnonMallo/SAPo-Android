@@ -38,14 +38,14 @@ public class CategoriasFragment extends Fragment {
 
     private final String LOG_TAG = CategoriasFragment.class.getSimpleName();
     private CategoriaAdapter categoriasAdapter;
-    private Integer almacenID;
+    private String almacenID;
 
     public CategoriasFragment(){
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        System.out.println("AAAA");
         List<DataCategoria> list = new ArrayList<DataCategoria>();
 
         categoriasAdapter =
@@ -74,7 +74,7 @@ public class CategoriasFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         if (intent != null) {
             if (intent.hasExtra("almacenID")) {
-                almacenID = intent.getIntExtra("almacenID",0);
+                almacenID = intent.getStringExtra("almacenID");
             }
             if (intent.hasExtra("almacenNombre")){
                 Activity activity = getActivity();
@@ -88,7 +88,7 @@ public class CategoriasFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchCategoriasTask extends AsyncTask<Integer, Void, DataCategoria[]> {
+    public class FetchCategoriasTask extends AsyncTask<String, Void, DataCategoria[]> {
 
         private final String LOG_TAG = FetchCategoriasTask.class.getSimpleName();
 
@@ -107,7 +107,7 @@ public class CategoriasFragment extends Fragment {
         }
 
         @Override
-        protected DataCategoria[] doInBackground(Integer... integers) {
+        protected DataCategoria[] doInBackground(String... strings) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -118,7 +118,7 @@ public class CategoriasFragment extends Fragment {
                 final String SAPO_BASE_URL = "https://sapo.azure-api.net/sapo/almacenes";
                 final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
                 final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-                final String ALMACENID_VALUE = integers[0].toString();
+                final String ALMACENID_VALUE = strings[0].toString();
 
                 Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                         .appendPath(ALMACENID_VALUE)

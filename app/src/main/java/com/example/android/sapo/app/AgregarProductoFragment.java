@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.example.android.sapo.app.webservices.PostAgregarProductos;
 public class AgregarProductoFragment extends Fragment {
 
     private final String LOG_TAG = AgregarProductoFragment.class.getSimpleName();
+    private String almacenID;
+    private String categoriaID;
 
     public AgregarProductoFragment() {
     }
@@ -25,6 +28,17 @@ public class AgregarProductoFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_agregar_producto, container, false);
+
+        Intent intent = getActivity().getIntent();
+        if (intent != null) {
+            if (intent.hasExtra("almacenID")) {
+                almacenID = intent.getStringExtra("almacenID");
+            }
+            if (intent.hasExtra("categoriaID")){
+                categoriaID = intent.getStringExtra("categoriaID");
+                Log.v("¡FB!", "CATEGORIAID: " + categoriaID);
+            }
+        }
 
         Button button = (Button) rootView.findViewById(R.id.agregar_producto_enviar);
         button.setOnClickListener(new Button.OnClickListener() {
@@ -40,19 +54,18 @@ public class AgregarProductoFragment extends Fragment {
                 params[1] = editText.getText().toString();
 
                 //CATEGORIA DEL PRODUCTO
-                params[2] = "6";
+                params[2] = categoriaID;
 
                 //CANTIDAD DEL PRODUCTO
                 editText = (EditText) rootView.findViewById(R.id.agregar_producto_stock);
                 params[3] = editText.getText().toString();
 
                 //ALMACEN ID
-                params[4] = "16";
+                params[4] = almacenID;
 
                 postAgregarProductos.execute(params);
             }
         });
-
 
         // Inflate the layout for this fragment
         return rootView;

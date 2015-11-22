@@ -61,7 +61,6 @@ public class TestUtilities extends AndroidTestCase {
         testValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID, "654");
         testValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_NOMBRE, "CNacional");
         testValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION, "Descripcion");
-        testValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_URL, "www.nacional.com.uy");
 
         return testValues;
     }

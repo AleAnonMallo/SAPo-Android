@@ -1,6 +1,7 @@
 package com.example.android.sapo.app;
 
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -48,6 +49,8 @@ public class AlmacenActivity extends ActionBarActivity {
         callbackManager = CallbackManager.Factory.create();
 
         if (AccessToken.getCurrentAccessToken() == null){
+
+
             setContentView(R.layout.activity_login);
             loginButton = (LoginButton)findViewById(R.id.login_button);
             loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
@@ -120,16 +123,23 @@ public class AlmacenActivity extends ActionBarActivity {
                                 parametros[1] = object.getString("last_name");
                                 parametros[2] = object.getString("first_name");
                                 parametros[3] = object.getString("id");
-                            } catch (JSONException ex) {
 
-                            } finally {
-                                postUsuario.execute(parametros);
                                 setContentView(R.layout.activity_tiendas);
                                 setTitle("Almacenes de " + parametros[2]);
                                 //if (savedInstanceState2 == null) {
-                                    getSupportFragmentManager().beginTransaction()
-                                            .add(R.id.container_tiendas, new AlmacenFragment())
-                                            .commit();
+                                getSupportFragmentManager().beginTransaction()
+                                        .add(R.id.container_tiendas, new AlmacenFragment())
+                                        .commit();
+                            } catch (JSONException ex) {
+
+                            } finally {
+                                //postUsuario.execute(parametros);
+                                //setContentView(R.layout.activity_tiendas);
+                                //setTitle("Almacenes de " + parametros[2]);
+                                //if (savedInstanceState2 == null) {
+                                    //getSupportFragmentManager().beginTransaction()
+                                      //      .add(R.id.container_tiendas, new AlmacenFragment())
+                                        //    .commit();
                                 //}
                             }
                         }
