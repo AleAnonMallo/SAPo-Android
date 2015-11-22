@@ -21,6 +21,7 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
     private static class ViewHolder {
         private TextView listProductoNombre;
         private TextView listProductoDescripcion;
+        private TextView listProductoStock;
     }
 
     public ProductoAdapter(Context context, int textViewResourceId, ArrayList<DataProducto> items) {
@@ -36,6 +37,7 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
 
             viewHolder.listProductoNombre = (TextView) convertView.findViewById(R.id.list_producto_nombre);
             viewHolder.listProductoDescripcion = (TextView) convertView.findViewById(R.id.list_producto_descripcion);
+            viewHolder.listProductoStock = (TextView) convertView.findViewById(R.id.list_producto_stock);
 
             convertView.setTag(viewHolder);
         } else {
@@ -56,6 +58,9 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
             String desc= item.getDescripcion().substring(0,fin) + "...";
 
             viewHolder.listProductoDescripcion.setText(desc);
+
+            Integer stock = item.getStock();
+            viewHolder.listProductoStock.setText(stock.toString());
         }
 
         return convertView;

@@ -120,6 +120,7 @@ public class ProductosFragment extends Fragment {
                 resultStrs[i].setNombre(producto.getString("nombre"));
                 resultStrs[i].setIdProducto(producto.getInt("id"));
                 resultStrs[i].setDescripcion(producto.getString("descripcion"));
+                resultStrs[i].setStock(jsonObject.getInt("cantidad"));
             }
             return resultStrs;
         }

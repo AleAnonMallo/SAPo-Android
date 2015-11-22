@@ -49,7 +49,7 @@ public class AlmacenActivity extends ActionBarActivity {
         callbackManager = CallbackManager.Factory.create();
 
         if (AccessToken.getCurrentAccessToken() == null){
-
+            Log.v("¡FB!","ACCESS TOKEN ES NULL");
 
             setContentView(R.layout.activity_login);
             loginButton = (LoginButton)findViewById(R.id.login_button);
@@ -105,7 +105,7 @@ public class AlmacenActivity extends ActionBarActivity {
                 }
             });
         } else {
-            Log.v("¡FB!","ELSE SIN CONEXION!");
+            Log.v("¡FB!","ACCESS TOKEN NOOO NULL. ELSE.");
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {

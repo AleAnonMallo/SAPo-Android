@@ -42,7 +42,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/list_item_high_textview"
+            android:id="@+id/list_producto_stock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="81"/>
