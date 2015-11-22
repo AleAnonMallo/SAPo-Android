@@ -46,9 +46,6 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
 
         DataProducto item = getItem(position);
         if (item!= null) {
-            // My layout has only one TextView
-            // do whatever you want with your string and long
-            //viewHolder.itemView.setText(String.format("%d %s", item.getId(), item.getNombre()));
             viewHolder.listProductoNombre.setText(item.getNombre());
 
             String descItem = item.getDescripcion();

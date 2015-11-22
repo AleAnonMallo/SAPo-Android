@@ -62,8 +62,6 @@ public class PostAgregarProductos extends AsyncTask<String, Void, Void> {
                     "\"categoria\":\"" + PARAM_CATEGORIA + "\",\n" +
                     "\"isgenerico\":\"" + false + "\"\n" +
                     "}";
-
-            Log.e("¡FB!", "JSON: " + str);
             byte[] outputInBytes = str.getBytes("UTF-8");
             OutputStream os = urlConnection.getOutputStream();
             os.write(outputInBytes);
@@ -96,7 +94,6 @@ public class PostAgregarProductos extends AsyncTask<String, Void, Void> {
             } catch (JSONException je) {
 
             }
-            Log.v("¡FB!", "JSON: " + JsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             return null;
@@ -177,7 +174,6 @@ public class PostAgregarProductos extends AsyncTask<String, Void, Void> {
             }
 
             JsonStr = buffer.toString();
-            Log.v("¡FB!", "JSON: " + JsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             return null;

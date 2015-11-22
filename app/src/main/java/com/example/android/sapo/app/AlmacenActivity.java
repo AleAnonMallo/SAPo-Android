@@ -49,8 +49,6 @@ public class AlmacenActivity extends ActionBarActivity {
         callbackManager = CallbackManager.Factory.create();
 
         if (AccessToken.getCurrentAccessToken() == null){
-            Log.v("¡FB!","ACCESS TOKEN ES NULL");
-
             setContentView(R.layout.activity_login);
             loginButton = (LoginButton)findViewById(R.id.login_button);
             loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
@@ -75,7 +73,6 @@ public class AlmacenActivity extends ActionBarActivity {
                                 public void onCompleted(
                                         JSONObject object,
                                         GraphResponse response) {
-                                    Log.v("¡FB!", object.toString());
                                     PostUsuario postUsuario = new PostUsuario();
                                     String[] parametros = new String[4];
                                     try {
@@ -105,7 +102,6 @@ public class AlmacenActivity extends ActionBarActivity {
                 }
             });
         } else {
-            Log.v("¡FB!","ACCESS TOKEN NOOO NULL. ELSE.");
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -113,8 +109,6 @@ public class AlmacenActivity extends ActionBarActivity {
                         public void onCompleted(
                                 JSONObject object,
                                 GraphResponse response) {
-                            Log.v("¡FB!", object.toString());
-
                             PostUsuario postUsuario = new PostUsuario();
                             String[] parametros = new String[4];
                             try {

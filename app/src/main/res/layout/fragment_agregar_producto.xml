@@ -35,14 +35,14 @@
         android:layout_marginTop="5dp"
         android:orientation="horizontal" >
 
-        <EditText
+        <!--<EditText
             android:id="@+id/agregar_producto_stock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:gravity="left"
             android:hint="@string/agregar_producto_stock" />
-
+-->
         <Button
             android:id="@+id/agregar_producto_enviar"
             android:layout_width="wrap_content"

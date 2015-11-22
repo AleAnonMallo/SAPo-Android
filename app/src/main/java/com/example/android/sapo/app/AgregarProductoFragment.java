@@ -1,6 +1,7 @@
 package com.example.android.sapo.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +19,8 @@ public class AgregarProductoFragment extends Fragment {
 
     private final String LOG_TAG = AgregarProductoFragment.class.getSimpleName();
     private String almacenID;
-    private String categoriaID;
+    private Integer categoriaID;
+    private String categoriaNombre;
 
     public AgregarProductoFragment() {
     }
@@ -26,17 +28,17 @@ public class AgregarProductoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         final View rootView = inflater.inflate(R.layout.fragment_agregar_producto, container, false);
-
         Intent intent = getActivity().getIntent();
         if (intent != null) {
             if (intent.hasExtra("almacenID")) {
                 almacenID = intent.getStringExtra("almacenID");
             }
             if (intent.hasExtra("categoriaID")){
-                categoriaID = intent.getStringExtra("categoriaID");
-                Log.v("¡FB!", "CATEGORIAID: " + categoriaID);
+                categoriaID = intent.getIntExtra("categoriaID",0);
+            }
+            if (intent.hasExtra("categoriaNombre")){
+                categoriaNombre = intent.getStringExtra("categoriaNombre");
             }
         }
 
@@ -54,16 +56,23 @@ public class AgregarProductoFragment extends Fragment {
                 params[1] = editText.getText().toString();
 
                 //CATEGORIA DEL PRODUCTO
-                params[2] = categoriaID;
+                params[2] = categoriaID.toString();
 
                 //CANTIDAD DEL PRODUCTO
-                editText = (EditText) rootView.findViewById(R.id.agregar_producto_stock);
-                params[3] = editText.getText().toString();
+                //editText = (EditText) rootView.findViewById(R.id.agregar_producto_stock);
+                //params[3] = editText.getText().toString();
 
                 //ALMACEN ID
                 params[4] = almacenID;
 
                 postAgregarProductos.execute(params);
+
+                Context context = getActivity();
+                Intent intent = new Intent(getActivity(), ProductosActivity.class)
+                        .putExtra("categoriaID", categoriaID)
+                        .putExtra("categoriaNombre", categoriaNombre)
+                        .putExtra("almacenID", almacenID);
+                startActivity(intent);
             }
         });
 

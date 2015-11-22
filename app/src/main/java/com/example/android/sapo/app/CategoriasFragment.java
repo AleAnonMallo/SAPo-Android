@@ -45,7 +45,7 @@ public class CategoriasFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("AAAA");
+
         List<DataCategoria> list = new ArrayList<DataCategoria>();
 
         categoriasAdapter =
@@ -57,19 +57,7 @@ public class CategoriasFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_categorias, container, false);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_categorias);
-        listView.setAdapter(categoriasAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Context context = getActivity();
-                Intent intent = new Intent(getActivity(), ProductosActivity.class)
-                        .putExtra("categoriaID", categoriasAdapter.getItem(i).getIdCategoria())
-                        .putExtra("categoriaNombre", categoriasAdapter.getItem(i).getNombre())
-                        .putExtra("almacenID", almacenID);
-                startActivity(intent);
-            }
-        });
 
         Intent intent = getActivity().getIntent();
         if (intent != null) {
@@ -83,7 +71,22 @@ public class CategoriasFragment extends Fragment {
         }
 
         FetchCategoriasTask fetchCategoriasTask = new FetchCategoriasTask();
-        fetchCategoriasTask.execute(almacenID);
+        if (almacenID != null){
+            listView.setAdapter(categoriasAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Context context = getActivity();
+                    Intent intent = new Intent(getActivity(), ProductosActivity.class)
+                            .putExtra("categoriaID", categoriasAdapter.getItem(i).getIdCategoria())
+                            .putExtra("categoriaNombre", categoriasAdapter.getItem(i).getNombre())
+                            .putExtra("almacenID", almacenID);
+                    startActivity(intent);
+                }
+            });
+            fetchCategoriasTask.execute(almacenID);
+        }
 
         return rootView;
     }

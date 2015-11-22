@@ -43,6 +43,7 @@ public class ProductosFragment extends Fragment {
     private ProductoAdapter productosAdapter;
     private String almacenID;
     private Integer categoriaID;
+    private String categoriaNombre;
 
     public ProductosFragment(){
     }
@@ -79,7 +80,8 @@ public class ProductosFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AgregarProductoActivity.class)
                         .putExtra("almacenID", almacenID)
-                        .putExtra("categoriaID", categoriaID.toString());
+                        .putExtra("categoriaID", categoriaID)
+                        .putExtra("categoriaNombre", categoriaNombre);
 
                 startActivity(intent);
             }
@@ -87,22 +89,23 @@ public class ProductosFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
 
-        String categoriaNombre = "";
+
         if (intent != null && intent.hasExtra("categoriaID")) {
-            categoriaID = intent.getIntExtra("categoriaID",0);
+            categoriaID = intent.getIntExtra("categoriaID", 0);
             almacenID = intent.getStringExtra("almacenID");
             categoriaNombre = intent.getStringExtra("categoriaNombre");
         }
-        String[] param = new String[2];
-        param[0] = almacenID;
-        param[1] = categoriaID.toString();
+        if (categoriaID != null && almacenID != null) {
+            String[] param = new String[2];
+            param[0] = almacenID;
+            param[1] = categoriaID.toString();
 
-        Activity activity = getActivity();
-        activity.setTitle(categoriaNombre);
+            Activity activity = getActivity();
+            activity.setTitle(categoriaNombre);
 
-        FetchProductosTask fetchProductosTask = new FetchProductosTask();
-        fetchProductosTask.execute(param);
-
+            FetchProductosTask fetchProductosTask = new FetchProductosTask();
+            fetchProductosTask.execute(param);
+        }
         return rootView;
     }
 
