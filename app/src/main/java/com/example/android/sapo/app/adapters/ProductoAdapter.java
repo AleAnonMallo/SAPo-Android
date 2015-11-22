@@ -53,7 +53,7 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
 
             String descItem = item.getDescripcion();
             int fin = 7;
-            if (descItem.length() < 7)
+            if (descItem.length() < 40)
                 fin = descItem.length();
             String desc= item.getDescripcion().substring(0,fin) + "...";
 
