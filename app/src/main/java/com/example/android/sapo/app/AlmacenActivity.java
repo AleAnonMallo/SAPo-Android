@@ -47,14 +47,10 @@ public class AlmacenActivity extends ActionBarActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
-
         if (AccessToken.getCurrentAccessToken() == null){
             setContentView(R.layout.activity_login);
-            Log.v("¡FB!", "IF!");
             loginButton = (LoginButton)findViewById(R.id.login_button);
-            Log.v("¡FB!", "IF2!");
             loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
-            Log.v("¡FB!", "IF3!");
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
                 @Override
@@ -69,7 +65,6 @@ public class AlmacenActivity extends ActionBarActivity {
 
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    Log.v("¡FB!", "SUCCESS!!!!");
                     GraphRequest request = GraphRequest.newMeRequest(
                             loginResult.getAccessToken(),
                             new GraphRequest.GraphJSONObjectCallback() {

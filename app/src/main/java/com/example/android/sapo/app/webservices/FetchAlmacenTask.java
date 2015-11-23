@@ -143,7 +143,7 @@ public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
         }
     }
 
-    long addAlmacen(String idAlmacen, String nomAlmacen, String descAlmacen, String urlAlmacen) {
+    public long addAlmacen(String idAlmacen, String nomAlmacen, String descAlmacen, String urlAlmacen) {
         long locationId;
 
         // First, check if the almacen with this idAlmacen exists in the db

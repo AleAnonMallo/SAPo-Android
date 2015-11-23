@@ -11,6 +11,8 @@
     <string name="facebook_app_id">154989634847136</string>
 
     <string name="action_logout">Logout</string>
+    <string name="content_authority">com.example.android.sapo.app</string>
+    <string name="sync_account_type">sapo.example.com</string>
 
 
 </resources>
