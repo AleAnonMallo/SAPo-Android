@@ -21,6 +21,7 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
     private static class ViewHolder {
         private TextView listProductoNombre;
         private TextView listProductoDescripcion;
+        private TextView listProductoStock;
     }
 
     public ProductoAdapter(Context context, int textViewResourceId, ArrayList<DataProducto> items) {
@@ -36,6 +37,7 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
 
             viewHolder.listProductoNombre = (TextView) convertView.findViewById(R.id.list_producto_nombre);
             viewHolder.listProductoDescripcion = (TextView) convertView.findViewById(R.id.list_producto_descripcion);
+            viewHolder.listProductoStock = (TextView) convertView.findViewById(R.id.list_producto_stock);
 
             convertView.setTag(viewHolder);
         } else {
@@ -44,11 +46,18 @@ public class ProductoAdapter extends ArrayAdapter<DataProducto> {
 
         DataProducto item = getItem(position);
         if (item!= null) {
-            // My layout has only one TextView
-            // do whatever you want with your string and long
-            //viewHolder.itemView.setText(String.format("%d %s", item.getId(), item.getNombre()));
             viewHolder.listProductoNombre.setText(item.getNombre());
-            viewHolder.listProductoDescripcion.setText(item.getDescripcion().substring(0,7) + "...");
+
+            String descItem = item.getDescripcion();
+            int fin = 7;
+            if (descItem.length() < 40)
+                fin = descItem.length();
+            String desc= item.getDescripcion().substring(0,fin) + "...";
+
+            viewHolder.listProductoDescripcion.setText(desc);
+
+            Integer stock = item.getStock();
+            viewHolder.listProductoStock.setText(stock.toString());
         }
 
         return convertView;

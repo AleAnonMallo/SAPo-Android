@@ -1,12 +1,13 @@
 package com.example.android.sapo.app;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.android.sapo.app.webservices.PostUsuario;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -72,7 +73,6 @@ public class AlmacenActivity extends ActionBarActivity {
                                 public void onCompleted(
                                         JSONObject object,
                                         GraphResponse response) {
-                                    Log.v("¡FB!", object.toString());
                                     PostUsuario postUsuario = new PostUsuario();
                                     String[] parametros = new String[4];
                                     try {
@@ -87,22 +87,20 @@ public class AlmacenActivity extends ActionBarActivity {
                                         postUsuario.execute(parametros);
                                         setContentView(R.layout.activity_tiendas);
                                         setTitle("Almacenes de " + parametros[2]);
-                                        if (savedInstanceState2 == null) {
+                                        //if (savedInstanceState2 == null) {
                                             getSupportFragmentManager().beginTransaction()
                                                     .add(R.id.container_tiendas, new AlmacenFragment())
                                                     .commit();
-                                        }
+                                        //}
                                     }
                                 }
                             });
                     Bundle parameters = new Bundle();
                     parameters.putString("fields", "id, first_name, last_name, email");
                     request.setParameters(parameters);
-                    Log.v("¡FB!", "SET PARAMETERS");
                     request.executeAsync();
                 }
             });
-            Log.v("¡FB!", "IF4!");
         } else {
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
@@ -111,8 +109,6 @@ public class AlmacenActivity extends ActionBarActivity {
                         public void onCompleted(
                                 JSONObject object,
                                 GraphResponse response) {
-                            Log.v("¡FB!", object.toString());
-
                             PostUsuario postUsuario = new PostUsuario();
                             String[] parametros = new String[4];
                             try {
@@ -121,17 +117,24 @@ public class AlmacenActivity extends ActionBarActivity {
                                 parametros[1] = object.getString("last_name");
                                 parametros[2] = object.getString("first_name");
                                 parametros[3] = object.getString("id");
+
+                                setContentView(R.layout.activity_tiendas);
+                                setTitle("Almacenes de " + parametros[2]);
+                                //if (savedInstanceState2 == null) {
+                                getSupportFragmentManager().beginTransaction()
+                                        .add(R.id.container_tiendas, new AlmacenFragment())
+                                        .commit();
                             } catch (JSONException ex) {
 
                             } finally {
-                                postUsuario.execute(parametros);
-                                setContentView(R.layout.activity_tiendas);
-                                setTitle("Almacenes de " + parametros[2]);
-                                if (savedInstanceState2 == null) {
-                                    getSupportFragmentManager().beginTransaction()
-                                            .add(R.id.container_tiendas, new AlmacenFragment())
-                                            .commit();
-                                }
+                                //postUsuario.execute(parametros);
+                                //setContentView(R.layout.activity_tiendas);
+                                //setTitle("Almacenes de " + parametros[2]);
+                                //if (savedInstanceState2 == null) {
+                                    //getSupportFragmentManager().beginTransaction()
+                                      //      .add(R.id.container_tiendas, new AlmacenFragment())
+                                        //    .commit();
+                                //}
                             }
                         }
                     });

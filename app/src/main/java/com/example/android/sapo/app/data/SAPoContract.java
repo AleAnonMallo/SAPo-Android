@@ -31,8 +31,6 @@ public class SAPoContract {
         public static final String COLUMN_ALMACEN_NOMBRE = "almacen_nombre";
         // DESCRIPCIÓN del almacén.
         public static final String COLUMN_ALMACEN_DESCRIPCION = "almacen_descripcion";
-        // URL del almacén.
-        public static final String COLUMN_ALMACEN_URL = "almacen_url";
 
         public static Uri buildAlmacenUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

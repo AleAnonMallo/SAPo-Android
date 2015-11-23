@@ -48,9 +48,9 @@ public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
             JSONObject oJson = aJson.getJSONObject(i);
             resultStrs[i] = new DataTienda();
             resultStrs[i].setNombre(oJson.getString("nombre"));
-            resultStrs[i].setId((int) oJson.getInt("id"));
+            resultStrs[i].setId(oJson.getString("id"));
 
-            addAlmacen(oJson.getString("id"), resultStrs[i].getNombre(), oJson.getString("descripcion"), oJson.getString("url"));
+//          addAlmacen(oJson.getString("id"), resultStrs[i].getNombre(), oJson.getString("descripcion"));
         }
         return  resultStrs;
     }
@@ -68,8 +68,7 @@ public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
             final String SAPO_APPEND_URL = "almacenes/list";
             final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
             final String OCP_APIM_SUBSCRIPTION_VALUE = "9f86432ae415401db0383f63ce64c4fe";
-            //final String USUARIO_ID = strings[0];
-            final String USUARIO_ID = "alejandroanonmallo@gmail.com";
+            final String USUARIO_ID = strings[0];
 
             Uri builtUri = Uri.parse(SAPO_BASE_URL).buildUpon()
                     .appendPath(USUARIO_ID)
@@ -143,7 +142,7 @@ public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
         }
     }
 
-    public long addAlmacen(String idAlmacen, String nomAlmacen, String descAlmacen, String urlAlmacen) {
+    public long addAlmacen(String idAlmacen, String nomAlmacen, String descAlmacen) {
         long locationId;
 
         // First, check if the almacen with this idAlmacen exists in the db
@@ -167,7 +166,6 @@ public class FetchAlmacenTask extends AsyncTask<String, Void, DataTienda[]> {
             locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID, idAlmacen);
             locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_NOMBRE, nomAlmacen);
             locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION, descAlmacen);
-            locationValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_URL, urlAlmacen);
 
             // Finally, insert location data into the database.
             Uri insertedUri = mContext.getContentResolver().insert(

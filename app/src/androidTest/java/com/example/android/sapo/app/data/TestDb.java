@@ -70,7 +70,6 @@ public class TestDb extends AndroidTestCase {
         almacenColumnHashSet.add(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID);
         almacenColumnHashSet.add(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_NOMBRE);
         almacenColumnHashSet.add(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION);
-        almacenColumnHashSet.add(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_URL);
 
         int columnNameIndex = c.getColumnIndex("name");
         do {

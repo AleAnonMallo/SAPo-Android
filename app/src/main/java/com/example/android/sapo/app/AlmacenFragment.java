@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -78,7 +79,6 @@ public class AlmacenFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 Intent intent = new Intent(getActivity(), CategoriasActivity.class)
                         .putExtra("almacenID", tiendasAdapter.getItem(i).getId())
                         .putExtra("almacenNombre", tiendasAdapter.getItem(i).getNombre());

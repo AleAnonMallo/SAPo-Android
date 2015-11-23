@@ -7,6 +7,7 @@ public class DataProducto {
     private int idProducto;
     private String nombre;
     private String descripcion;
+    private Integer stock;
 
     public DataProducto() {
     }
@@ -33,5 +34,13 @@ public class DataProducto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 }

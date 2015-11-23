@@ -1,4 +1,4 @@
-package com.example.android.sapo.app;
+package com.example.android.sapo.app.webservices;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -84,9 +84,7 @@ public class PostUsuario  extends AsyncTask<String, Void, Void> {
                 // Si no leyó nada, termina.
                 return null;
             }
-
             JsonStr = buffer.toString();
-            Log.v("¡FB!", "JSON: " + JsonStr);
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
             return null;

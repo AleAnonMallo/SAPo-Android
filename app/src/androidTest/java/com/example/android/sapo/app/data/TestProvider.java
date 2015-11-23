@@ -320,7 +320,6 @@ public class TestProvider extends AndroidTestCase {
             ContentValues weatherValues = new ContentValues();
             weatherValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_ID, locationRowId);
             weatherValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_NOMBRE, "currentTestDate");
-            weatherValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_URL, "www.nacional.com.uy");
             weatherValues.put(SAPoContract.AlmacenEntry.COLUMN_ALMACEN_DESCRIPCION, "descripcion-prueba");
             returnContentValues[i] = weatherValues;
         }
