@@ -68,6 +68,13 @@
             android:name=".data.SAPoProvider"
             android:exported="false"
             android:syncable="true" />
+
+        <activity android:name=".AgregarProductoActivity"
+            android:parentActivityName=".ProductosActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.sapo.app.ProductosActivity" />
+        </activity>
     </application>
 
 </manifest>
